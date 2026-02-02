@@ -55,3 +55,4 @@ coverage.xml
 *.dll
 *.so
 *.dylib
+*.png
