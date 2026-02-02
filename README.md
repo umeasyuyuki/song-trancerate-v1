@@ -1,116 +1,177 @@
-# Antigravity Orchestra Template
+# 🎼 Antigravity Orchestra
 
-Google Antigravity × Codex CLI でマルチエージェント協調開発を行うためのテンプレート。
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20WSL2-blue.svg)](#前提条件)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Sora-bluesky/antigravity-orchestra/issues)
 
-## 概要
+[![日本語](https://img.shields.io/badge/lang-日本語-blue.svg)](#日本語)
+[![English](https://img.shields.io/badge/lang-English-red.svg)](#english)
 
-Claude Code Orchestra の考え方を Google Antigravity で再現するためのテンプレートです。
+> AI agent orchestration template: Antigravity + Codex CLI
 
-- **Antigravity**: オーケストレーター、リサーチャー、ビルダー
-- **Codex CLI**: デザイナー、デバッガー、オーディター
+---
 
-## 必要環境
+## English
 
-- Windows 11
-- WSL2 (Ubuntu)
-- Google Antigravity
-- OpenAI Codex CLI
+**What is this?**
+A multi-agent development template that orchestrates Google Antigravity (Gemini 3 Pro) and OpenAI Codex CLI for AI-powered development workflow.
 
-## セットアップ
+**Key Features:**
+- 🎯 Single interface - Talk only to Antigravity, it delegates to Codex when needed
+- 🔄 6 Workflows + 5 Skills + 8 Rules pre-configured
+- 📝 Design decisions automatically documented
 
-### 1. テンプレートをダウンロード
+**Quick Start:**
 
-```bash
-git clone https://github.com/YOUR_USERNAME/antigravity-orchestra-template.git
-cd antigravity-orchestra-template
-```
+~~~bash
+git clone https://github.com/Sora-bluesky/antigravity-orchestra.git
+cd antigravity-orchestra
+# Open this folder in Antigravity, then type: /startproject Hello World
+~~~
 
-### 2. パスの設定
+📖 For detailed instructions, see [Zenn article (Japanese)](https://zenn.dev/sora_biz/articles/antigravity-orchestra-guide).
 
-WSL で以下のコマンドを実行してパスを確認：
+---
 
-```bash
-which node
-which codex
-```
+## 日本語
 
-表示されたパスを `.agent/skills/codex-system/scripts/ask_codex.ps1` に設定：
+### ✨ これは何？
 
-```powershell
-$NODE_PATH = "/home/YOUR_USERNAME/.nvm/versions/node/v22.x.x/bin/node"
-$CODEX_PATH = "/home/YOUR_USERNAME/.nvm/versions/node/v22.x.x/bin/codex"
-```
+Google Antigravity と OpenAI Codex CLI を協調させる、AIマルチエージェント開発テンプレートです。
 
-### 3. 動作確認
+~~~
+┌─────────────────────────────────────────────────────────┐
+│                     ユーザー                            │
+│                        │                               │
+│                        ↓                               │
+│  ┌─────────────────────────────────────────────────┐   │
+│  │   Google Antigravity (オーケストレーター)        │   │
+│  │   • ユーザー対話・リサーチ・実装                 │   │
+│  │                    │                            │   │
+│  │                    ↓ 設計/レビュー時            │   │
+│  │         ┌─────────────────────┐                 │   │
+│  │         │   Codex CLI         │                 │   │
+│  │         │   • 設計レビュー     │                 │   │
+│  │         │   • デバッグ         │                 │   │
+│  │         │   • 品質チェック     │                 │   │
+│  │         └─────────────────────┘                 │   │
+│  └─────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────┘
+~~~
 
-Antigravity で以下を実行：
+**インターフェースは Antigravity だけ。** 必要に応じて Antigravity が Codex に相談します。
 
-```
+### 🎯 こんな人におすすめ
+
+- AIを使った開発に興味があるが、複数ツールの使い分けが難しい
+- Antigravity を使っているが、設計やレビューの品質を上げたい
+- Claude Code Orchestra の考え方を Antigravity で試したい
+
+### 🚀 クイックスタート
+
+~~~bash
+# 1. クローン
+git clone https://github.com/Sora-bluesky/antigravity-orchestra.git
+
+# 2. Antigravity でフォルダを開く
+#    File → Open Folder → antigravity-orchestra
+
+# 3. 動作確認
 /startproject Hello World を表示するプログラム
-```
+~~~
 
-## ディレクトリ構成
+### 📁 ディレクトリ構成
 
-```
-.
+~~~
+antigravity-orchestra/
 ├── .agent/
-│   ├── workflows/      # ワークフロー（6個）
-│   ├── skills/         # スキル（5個）
-│   └── rules/          # ルール（8個）
-├── .codex/
-│   └── AGENTS.md       # Codex CLI 設定
-├── docs/
-│   ├── DESIGN.md       # 設計決定記録
-│   ├── research/       # リサーチ結果
-│   └── libraries/      # ライブラリ文書
-└── logs/
-    └── codex-responses/ # Codex 相談ログ
-```
+│   ├── workflows/          # 6 Workflows
+│   │   ├── startproject.md # /startproject（メイン）
+│   │   ├── plan.md         # /plan
+│   │   ├── tdd.md          # /tdd
+│   │   └── ...
+│   ├── skills/             # 5 Skills
+│   │   ├── codex-system/   # Codex CLI 連携
+│   │   └── ...
+│   └── rules/              # 8 Rules
+│       ├── delegation-triggers.md  # 自動振り分け
+│       └── ...
+├── .codex/                 # Codex CLI 設定
+├── docs/                   # 知識ベース
+└── logs/                   # Codex 相談ログ
+~~~
 
-## 使い方
+### 📋 前提条件
 
-### 新機能の開発
+| 必要なもの | 確認方法 | インストールガイド |
+|-----------|----------|-------------------|
+| Google Antigravity | 起動できる | [ガイド](https://zenn.dev/sora_biz/articles/antigravity-windows-install-guide) |
+| WSL2 (Ubuntu) | `wsl --version` | [ガイド](https://zenn.dev/sora_biz/articles/wsl2-windows-install-guide) |
+| Node.js | `node --version` | [公式](https://nodejs.org) |
+| Codex CLI | `codex --version` | `npm install -g @openai/codex` |
+| OPENAI_API_KEY | `echo $OPENAI_API_KEY` | [OpenAI](https://platform.openai.com/api-keys) |
 
-```
-/startproject お問い合わせフォーム
-```
+### 📖 詳しい使い方
 
-### 実装計画の作成
+詳細な手順は Zenn 記事をご覧ください：
 
-```
-/plan TODOリストの保存機能
-```
+📚 **[【非エンジニア×AI開発】Google Antigravity × Codex CLI 協調開発](https://zenn.dev/sora_biz/articles/antigravity-orchestra-guide)**
 
-### テスト駆動開発
+### ❓ よくある質問
 
-```
-/tdd 電卓の足し算機能
-```
+<details>
+<summary><strong>Q: Codex CLI がなくても使える？</strong></summary>
 
-### コードのリファクタリング
+はい。Antigravity 単体でも Workflows は動作します。Codex 連携機能（設計レビュー、デバッグ委譲）は使えませんが、基本的な開発フローは体験できます。
+</details>
 
-```
-/simplify main.py
-```
+<details>
+<summary><strong>Q: 料金はかかる？</strong></summary>
 
-### セッションの保存
+- **Antigravity**: 無料（パブリックプレビュー）
+- **Codex CLI**: OpenAI API 料金が発生します（従量課金）
+</details>
 
-```
-/checkpoint
-```
+<details>
+<summary><strong>Q: Mac / Linux でも使える？</strong></summary>
 
-## 詳細ドキュメント
+現時点では Windows + WSL2 環境を前提としています。Mac/Linux 対応は今後検討予定です。
+</details>
 
-- [Zenn 記事: Orchestra方式でタスク自動振り分け](https://zenn.dev/sora_biz/articles/antigravity-orchestra-guide)
-- [Zenn 記事: デュアルエージェント開発](https://zenn.dev/sora_biz/articles/antigravity-codex-dual-agent-guide)
+### ⚠️ 注意事項
 
-## 参考
+- **Antigravity はパブリックプレビュー版**です。仕様変更やバグが発生する可能性があります
+- 問題が発生した場合は [Issue](https://github.com/Sora-bluesky/antigravity-orchestra/issues) でお知らせください
 
-このテンプレートは以下を参考に作成しました：
+### 🤝 Contributing
+
+Issue や Pull Request は大歓迎です！
+
+- 🐛 バグ報告: [Issue を作成](https://github.com/Sora-bluesky/antigravity-orchestra/issues/new)
+- 💡 機能提案: [Issue を作成](https://github.com/Sora-bluesky/antigravity-orchestra/issues/new)
+- 📝 ドキュメント改善: PR をお待ちしています
+
+### 🔗 関連リンク
+
+| ツール | リンク |
+|--------|--------|
+| Google Antigravity | [antigravity.google](https://antigravity.google) |
+| OpenAI Codex CLI | [GitHub](https://github.com/openai/codex) |
+| Zenn 記事 | [詳細ガイド](https://zenn.dev/sora_biz/articles/antigravity-orchestra-guide) |
+
+### 📜 ライセンス
+
+[MIT License](LICENSE)
+
+### 🙏 謝辞
+
+このテンプレートは以下の素晴らしいプロジェクトを参考にしています：
 
 - [Claude Code Orchestra](https://zenn.dev/mkj/articles/claude-code-orchestra_20260120) by @mkj（松尾研究所）
 - [GitHub: claude-code-orchestra](https://github.com/DeL-TaiseiOzaki/claude-code-orchestra)
 
-## ライセンス
+---
 
-MIT License
+<p align="center">
+  Made with ❤️ by <a href="https://x.com/sora_biz">@sora_biz</a>
+</p>
