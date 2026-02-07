@@ -52,19 +52,23 @@ logs/
 
 存在しないファイルをテンプレートから作成。
 
-## Step 5: パス設定の確認
+## Step 5: macOS 実行環境の確認
 
-`scripts/ask_codex.ps1` 内のパスが正しく設定されているか確認。
+`scripts/ask_codex.sh` と `scripts/review.sh` が存在し、実行権限を持つか確認。
 
 ユーザーに以下を確認：
 
-```
-WSL で以下のコマンドを実行し、パスを確認してください：
-
+```bash
 which node
 which codex
+bash .agent/skills/codex-system/scripts/ask_codex.sh --help
+```
 
-表示されたパスを scripts/ask_codex.ps1 に設定してください。
+デフォルトは Apple Silicon + Homebrew 前提：
+
+```bash
+NODE_PATH=/opt/homebrew/bin/node
+CODEX_PATH=/opt/homebrew/bin/codex
 ```
 
 ## Step 6: 完了報告
@@ -75,6 +79,6 @@ which codex
 Orchestra環境のセットアップが完了しました。
 
 次のステップ：
-1. scripts/ask_codex.ps1 のパスを設定
+1. scripts/ask_codex.sh / review.sh の動作確認
 2. /startproject で最初のプロジェクトを開始
 ```

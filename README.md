@@ -1,7 +1,7 @@
 # 🎼 Antigravity Orchestra
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20WSL2-blue.svg)](#前提条件)
+[![Platform](https://img.shields.io/badge/Platform-macOS%20(Apple%20Silicon)-blue.svg)](#前提条件)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Sora-bluesky/antigravity-orchestra/issues)
 
 **🌐 Language: 日本語 | [English](README.en.md)**
@@ -64,22 +64,25 @@
 | 必要なもの | 確認方法 | 備考 |
 |-----------|----------|------|
 | Google Antigravity | Antigravity が起動できる | [公式サイト](https://antigravity.google) |
-| WSL2 (Ubuntu) | PowerShell で `wsl --version` | [インストールガイド](https://zenn.dev/sora_biz/articles/wsl2-windows-install-guide) |
-| Node.js (WSL2内) | WSL で `node --version` | [nodejs.org](https://nodejs.org) |
-| Codex CLI (WSL2内) | WSL で `codex --version` | `npm i -g @openai/codex` |
+| macOS (Apple Silicon) | `uname -m` が `arm64` | 推奨: macOS 14+ |
+| Homebrew | `brew --version` | [brew.sh](https://brew.sh) |
+| Node.js | `which node` が `/opt/homebrew/bin/node` | [nodejs.org](https://nodejs.org) |
+| Codex CLI | `which codex` が `/opt/homebrew/bin/codex` | `npm i -g @openai/codex` |
 | ChatGPT Plus/Pro | OpenAI サブスクリプション | $20/月〜（OAuth認証） |
 
 ---
 
 ## 🚀 クイックスタート
 
+非エンジニア向けの完全版手順は `docs/MACOS_SETUP_COMPLETE.md` を参照してください。
+
 ### Step 1: テンプレートの取得
 
-WSL2（Ubuntu）ターミナルで実行：
+macOS のターミナル（zsh）で実行：
 
 ```bash
 # プロジェクトフォルダに移動
-cd /mnt/c/Users/あなたのユーザー名/Documents/Projects
+cd /Users/asyuyukiume/Projects
 
 # テンプレートをクローン
 git clone https://github.com/Sora-bluesky/antigravity-orchestra.git my-project
@@ -88,30 +91,32 @@ git clone https://github.com/Sora-bluesky/antigravity-orchestra.git my-project
 cd my-project
 ```
 
-### Step 2: パスの設定
+### Step 2: 実行環境の確認
 
-WSL2 で Node.js と Codex のパスを確認：
+Node.js と Codex のパスを確認：
 
 ```bash
-which node    # 例: /home/ユーザー名/.nvm/versions/node/v22.x.x/bin/node
-which codex   # 例: /home/ユーザー名/.nvm/versions/node/v22.x.x/bin/codex
+which node    # /opt/homebrew/bin/node
+which codex   # /opt/homebrew/bin/codex
 ```
 
-`.agent/skills/codex-system/scripts/ask_codex.ps1` を編集し、パスを更新：
+`codex-system` スクリプトはこの環境に合わせて設定済みです。
+必要なら環境変数で上書きできます：
 
-```powershell
-$NODE_PATH = "/home/ユーザー名/.nvm/versions/node/v22.x.x/bin/node"
-$CODEX_PATH = "/home/ユーザー名/.nvm/versions/node/v22.x.x/bin/codex"
+```bash
+NODE_PATH="$(which node)" \
+CODEX_PATH="$(which codex)" \
+bash .agent/skills/codex-system/scripts/ask_codex.sh --mode analyze --question "Environment check"
 ```
 
-`review.ps1` も同様に更新してください。
+通常利用では設定変更は不要です。
 
 ### Step 3: Antigravity でプロジェクトを開く
 
-1. **Antigravity を起動**（スタートメニューまたはタスクバーから）
-2. **File → Open Folder** をクリック（または `Ctrl+K, Ctrl+O`）
+1. **Antigravity を起動**
+2. **File → Open Folder** をクリック（または `Cmd+K`, `Cmd+O`）
 3. 以下のフォルダに移動：
-   - `C:\Users\あなたのユーザー名\Documents\Projects\my-project`
+   - `/Users/asyuyukiume/Projects/my-project`
 4. **「フォルダーの選択」** をクリック
 
 ### Step 4: 動作確認
@@ -149,8 +154,8 @@ my-project/
 │   │   ├── codex-system/     # Codex CLI 連携
 │   │   │   ├── SKILL.md
 │   │   │   └── scripts/
-│   │   │       ├── ask_codex.ps1
-│   │   │       └── review.ps1
+│   │   │       ├── ask_codex.sh
+│   │   │       └── review.sh
 │   │   ├── design-tracker/
 │   │   ├── research/
 │   │   ├── update-design/
@@ -378,17 +383,18 @@ Codex がテストケースを設計し、Antigravity が実装します。
 </details>
 
 <details>
-<summary><strong>Q: なぜ PowerShell スクリプト経由で Codex を呼ぶのですか？</strong></summary>
+<summary><strong>Q: なぜ shell スクリプト経由で Codex を呼ぶのですか？</strong></summary>
 
-Antigravity は Windows で動作しますが、Codex CLI は WSL2（Linux）で最適に動作します。PowerShell スクリプトがこのギャップを埋め、WSL コマンドを呼び出します。
+macOS では Antigravity と Codex CLI が同一環境で動くため、`bash` スクリプトで直接呼び出す構成にしています。WSL ブリッジは不要です。
 
 </details>
 
 <details>
 <summary><strong>Q: Node.js を再インストールしたらパスはどうなりますか？</strong></summary>
 
-1. WSL2 で `which node` と `which codex` を実行
-2. `ask_codex.ps1` と `review.ps1` のパスを更新
+1. `which node` と `which codex` を実行
+2. 必要なら `NODE_PATH` / `CODEX_PATH` を環境変数で上書き
+3. `ask_codex.sh` / `review.sh` を再実行
 
 </details>
 
@@ -413,8 +419,8 @@ Plus（$20/月）で十分使えます。Pro（$200/月）はより多くの使�
 | 問題 | 解決策 |
 |------|--------|
 | Codex スキルが起動しない | 明示的に「Codex に相談して」と依頼、またはキーワード（設計、デバッグ、レビュー）を使用 |
-| パスが見つからないエラー | WSL2 で `which node` と `which codex` を再確認し、スクリプトを更新 |
-| WSL が起動しない | PowerShell で `wsl --status` を実行 |
+| パスが見つからないエラー | `which node` と `which codex` を再確認し、必要なら `NODE_PATH` / `CODEX_PATH` を指定 |
+| `permission denied` | `chmod +x .agent/skills/codex-system/scripts/*.sh` を実行 |
 | 役割境界が守られない | 明示的に「TDDはCodexに委譲して」と指示 |
 
 ---
@@ -449,9 +455,9 @@ Plus（$20/月）で十分使えます。Pro（$200/月）はより多くの使�
 
 ### 関連記事
 
-- [Antigravity インストールガイド](https://zenn.dev/sora_biz/articles/antigravity-windows-install-guide)
-- [WSL2 インストールガイド](https://zenn.dev/sora_biz/articles/wsl2-windows-install-guide)
+- [Antigravity ガイド](https://zenn.dev/sora_biz/articles/antigravity-orchestra-guide)
 - [詳しい使い方（Zenn記事）](https://zenn.dev/sora_biz/articles/antigravity-orchestra-guide)
+- [macOS版 完全セットアップ手順](docs/MACOS_SETUP_COMPLETE.md)
 
 ---
 

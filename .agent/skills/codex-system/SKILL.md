@@ -31,14 +31,14 @@ description: Use this skill when design decisions, debugging, or code review is 
 
 ### 設計・デバッグ（分析のみ）
 
-```powershell
-.\scripts\ask_codex.ps1 -Mode "analyze" -Question "{質問}"
+```bash
+bash ./scripts/ask_codex.sh --mode analyze --question "{質問}"
 ```
 
 ### レビュー
 
-```powershell
-.\scripts\review.ps1
+```bash
+bash ./scripts/review.sh
 ```
 
 ## 言語プロトコル

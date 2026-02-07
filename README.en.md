@@ -1,7 +1,7 @@
 # 🎼 Antigravity Orchestra
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20WSL2-blue.svg)](#prerequisites)
+[![Platform](https://img.shields.io/badge/Platform-macOS%20(Apple%20Silicon)-blue.svg)](#prerequisites)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Sora-bluesky/antigravity-orchestra/issues)
 
 **🌐 Language: [日本語](README.md) | English**
@@ -64,22 +64,25 @@ Inspired by [Claude Code Orchestra](https://github.com/DeL-TaiseiOzaki/claude-co
 | Requirement | How to Check | Notes |
 |-------------|--------------|-------|
 | Google Antigravity | Can launch Antigravity | [Official Site](https://antigravity.google) |
-| WSL2 (Ubuntu) | `wsl --version` in PowerShell | [Install Guide](https://zenn.dev/sora_biz/articles/wsl2-windows-install-guide) |
-| Node.js (in WSL2) | `node --version` in WSL | [nodejs.org](https://nodejs.org) |
-| Codex CLI (in WSL2) | `codex --version` in WSL | `npm i -g @openai/codex` |
+| macOS (Apple Silicon) | `uname -m` returns `arm64` | Recommended: macOS 14+ |
+| Homebrew | `brew --version` | [brew.sh](https://brew.sh) |
+| Node.js | `which node` returns `/opt/homebrew/bin/node` | [nodejs.org](https://nodejs.org) |
+| Codex CLI | `which codex` returns `/opt/homebrew/bin/codex` | `npm i -g @openai/codex` |
 | ChatGPT Plus/Pro | OpenAI subscription | $20/month~ (OAuth sign-in) |
 
 ---
 
 ## 🚀 Quick Start
 
+For a beginner-friendly full walkthrough, see `docs/MACOS_SETUP_COMPLETE.md`.
+
 ### Step 1: Clone the Template
 
-Open WSL2 (Ubuntu) terminal:
+Open a macOS terminal (zsh):
 
 ```bash
 # Navigate to your projects folder
-cd /mnt/c/Users/YOUR_USERNAME/Documents/Projects
+cd /Users/asyuyukiume/Projects
 
 # Clone the template
 git clone https://github.com/Sora-bluesky/antigravity-orchestra.git my-project
@@ -88,29 +91,31 @@ git clone https://github.com/Sora-bluesky/antigravity-orchestra.git my-project
 cd my-project
 ```
 
-### Step 2: Configure Paths
+### Step 2: Verify Runtime
 
-Check your Node.js and Codex paths in WSL2:
+Check your Node.js and Codex paths:
 
 ```bash
-which node    # e.g., /home/YOUR_USERNAME/.nvm/versions/node/v22.x.x/bin/node
-which codex   # e.g., /home/YOUR_USERNAME/.nvm/versions/node/v22.x.x/bin/codex
+which node    # /opt/homebrew/bin/node
+which codex   # /opt/homebrew/bin/codex
 ```
 
-Edit `.agent/skills/codex-system/scripts/ask_codex.ps1` and update:
+`codex-system` scripts are preconfigured for this environment.
+If needed, override via environment variables:
 
-```powershell
-$NODE_PATH = "/home/YOUR_USERNAME/.nvm/versions/node/v22.x.x/bin/node"
-$CODEX_PATH = "/home/YOUR_USERNAME/.nvm/versions/node/v22.x.x/bin/codex"
+```bash
+NODE_PATH="$(which node)" \
+CODEX_PATH="$(which codex)" \
+bash .agent/skills/codex-system/scripts/ask_codex.sh --mode analyze --question "Environment check"
 ```
 
-Also update `review.ps1` with the same paths.
+No file edits are required in typical usage.
 
 ### Step 3: Open in Antigravity
 
-1. Launch **Antigravity** from Start menu or taskbar
-2. Click **File → Open Folder** (or `Ctrl+K, Ctrl+O`)
-3. Navigate to: `C:\Users\YOUR_USERNAME\Documents\Projects\my-project`
+1. Launch **Antigravity**
+2. Click **File → Open Folder** (or `Cmd+K`, `Cmd+O`)
+3. Navigate to: `/Users/asyuyukiume/Projects/my-project`
 4. Click **Select Folder**
 
 ### Step 4: Try It!
@@ -148,8 +153,8 @@ my-project/
 │   │   ├── codex-system/     # Codex CLI integration
 │   │   │   ├── SKILL.md
 │   │   │   └── scripts/
-│   │   │       ├── ask_codex.ps1
-│   │   │       └── review.ps1
+│   │   │       ├── ask_codex.sh
+│   │   │       └── review.sh
 │   │   ├── design-tracker/
 │   │   ├── research/
 │   │   ├── update-design/
@@ -377,17 +382,18 @@ Yes, but you'll lose the design review and debugging capabilities. Antigravity w
 </details>
 
 <details>
-<summary><strong>Q: Why is Codex called via PowerShell scripts?</strong></summary>
+<summary><strong>Q: Why is Codex called via shell scripts?</strong></summary>
 
-Antigravity runs on Windows, but Codex CLI works best in WSL2 (Linux). The PowerShell scripts bridge this gap by calling WSL commands.
+On macOS, Antigravity and Codex CLI run in the same environment, so direct `bash` scripts are the simplest and most stable integration.
 
 </details>
 
 <details>
 <summary><strong>Q: How do I update the paths if I reinstall Node.js?</strong></summary>
 
-1. Run `which node` and `which codex` in WSL2
-2. Update the paths in `ask_codex.ps1` and `review.ps1`
+1. Run `which node` and `which codex`
+2. If required, override `NODE_PATH` and `CODEX_PATH` as environment variables
+3. Re-run `ask_codex.sh` and `review.sh`
 
 </details>
 
@@ -412,8 +418,8 @@ Plus ($20/month) is sufficient. Consider Pro ($200/month) if you need higher usa
 | Issue | Solution |
 |-------|----------|
 | Codex skill not triggered | Explicitly say "Ask Codex about this" or use keywords (design, debug, review) |
-| Path not found error | Re-check `which node` and `which codex` in WSL2, update scripts |
-| WSL not starting | Run `wsl --status` in PowerShell |
+| Path not found error | Re-check `which node` and `which codex`, then set `NODE_PATH` / `CODEX_PATH` |
+| `permission denied` | Run `chmod +x .agent/skills/codex-system/scripts/*.sh` |
 | Role boundary violated | Explicitly say "Delegate TDD to Codex" |
 
 ---
@@ -448,9 +454,9 @@ For bug reports or suggestions, please [open an issue](https://github.com/Sora-b
 
 ### Related Articles (Japanese)
 
-- [Antigravity Install Guide](https://zenn.dev/sora_biz/articles/antigravity-windows-install-guide)
-- [WSL2 Install Guide](https://zenn.dev/sora_biz/articles/wsl2-windows-install-guide)
+- [Antigravity Guide](https://zenn.dev/sora_biz/articles/antigravity-orchestra-guide)
 - [Detailed Usage Guide (Zenn)](https://zenn.dev/sora_biz/articles/antigravity-orchestra-guide)
+- [Complete macOS Setup Guide](docs/MACOS_SETUP_COMPLETE.md)
 
 ---
 

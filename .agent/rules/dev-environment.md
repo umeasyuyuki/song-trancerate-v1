@@ -24,27 +24,33 @@
 
 ## 環境構成
 
-### Windows + WSL2
+### macOS (Apple Silicon)
 
 ```
-Windows (PowerShell)
+macOS (zsh)
     │
     ├── Google Antigravity (エディタ)
     │
-    └── WSL2 (Ubuntu)
+    └── Homebrew
             │
-            ├── Node.js (nvm で管理)
-            ├── Codex CLI
+            ├── Node.js (/opt/homebrew/bin/node)
+            ├── Codex CLI (/opt/homebrew/bin/codex)
             └── 開発ツール
 ```
 
 ### パス設定
 
-Codex CLI を呼び出すスクリプトでは、WSL 内のパスを使用：
+Codex CLI を呼び出すスクリプトでは、macOS のローカルパスを使用：
 
-```powershell
-# Windows パス → WSL パス
-# C:\Users\xxx\project → /mnt/c/Users/xxx/project
+```bash
+NODE_PATH=/opt/homebrew/bin/node
+CODEX_PATH=/opt/homebrew/bin/codex
+```
+
+必要なら環境変数で上書き：
+
+```bash
+NODE_PATH="$(which node)" CODEX_PATH="$(which codex)" bash .agent/skills/codex-system/scripts/ask_codex.sh --mode analyze --question "Sanity check"
 ```
 
 ## 環境変数
@@ -83,6 +89,6 @@ pnpm add -D dev-package-name
 
 ## 注意事項
 
-- WSL2 と Windows でファイル権限が異なる場合がある
-- パス区切り文字に注意（`\` vs `/`）
-- 改行コードの違いに注意（CRLF vs LF）
+- Homebrew のインストール先は Apple Silicon で `/opt/homebrew`、Intel Mac で `/usr/local`
+- 実行権限が必要なスクリプトは `chmod +x` を付与する
+- 改行コードは LF を使用する
