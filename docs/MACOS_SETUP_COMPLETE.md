@@ -1,4 +1,4 @@
-# macOS版 Antigravity Orchestra 完全セットアップ手順（非エンジニア向け）
+# macOS版 Antigravity Orchestra 完全セットアップ手順
 
 この手順は、**macOS（Apple Silicon）** で  
 **Antigravity + Codex CLI を使った Orchestra 環境**を最初から作るための完全版です。
