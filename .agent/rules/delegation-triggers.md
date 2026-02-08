@@ -40,7 +40,10 @@
 
 1. `/prepare-codex-context` を実行
 2. `docs/for-codex/manifest.md` の必須キーを確認
-3. その後に Codex へ委譲
+3. `requirements_questions_asked >= 3` と `requirements_confirmed = yes` を確認
+4. 曖昧点が残る場合は質問数 4 以上を推奨
+5. `conversation_language`, `ui_language`, `readme_language` が日本語優先ポリシーを示す値（`ja-priority` など）であることを確認
+6. その後に Codex へ委譲
 
 ## 透明性
 

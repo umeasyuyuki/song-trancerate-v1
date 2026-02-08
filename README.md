@@ -38,6 +38,14 @@
 
 ---
 
+## 🗣️ 言語ポリシー
+
+- UI文言は日本語を既定とし、必要に応じて英語併記を許可する
+- `README.md` を正本とし、`README.en.md` は派生ドキュメントとして柔軟に更新する
+- `/startproject` と `/plan` の要件深掘り会話は日本語優先で実施する（必要なら英語補助可）
+
+---
+
 ## 🎯 こんな人におすすめ
 
 - Antigravity を使っているが、設計やレビューの品質を上げたい
@@ -130,7 +138,7 @@ Antigravity のチャットで入力：
 Antigravity が以下を自動的に実行すれば成功です：
 
 1. リポジトリ構造を分析
-2. 要件をヒアリング
+2. 日本語優先で要件を深掘り質問し（最低3問、必要なら4問以上）、要件サマリーの承認を取得
 3. `docs/for-codex/` を生成
 4. Codex Gate 1 で計画レビューを実施
 5. タスクリストを作成
@@ -144,7 +152,7 @@ Antigravity が以下を自動的に実行すれば成功です：
 my-project/
 ├── .agent/
 │   ├── workflows/        # 8 ワークフロー
-│   │   ├── startproject.md   # メインワークフロー（7フェーズ）
+│   │   ├── startproject.md   # メインワークフロー（8フェーズ）
 │   │   ├── plan.md           # 実装計画
 │   │   ├── tdd.md            # テスト駆動開発
 │   │   ├── simplify.md       # リファクタリング
@@ -194,17 +202,20 @@ my-project/
 
 ## 📖 Workflows の詳細
 
-### /startproject - メインワークフロー（7フェーズ）
+### /startproject - メインワークフロー（8フェーズ）
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
+│  Phase 0: Antigravity (Requirements Deep Dive / JA)             │
+│  → 日本語優先で要件深掘り質問（最低3問、必要なら4問以上）        │
+│  → 要件サマリーをユーザー承認                                    │
+├─────────────────────────────────────────────────────────────────┤
 │  Phase 1: Antigravity (Research)                                │
 │  → リポジトリ分析・ライブラリ調査                               │
 │  → Output: docs/research/{feature}.md                           │
 ├─────────────────────────────────────────────────────────────────┤
-│  Phase 2: Antigravity (Requirements)                            │
-│  → ユーザーから要件ヒアリング（目的、スコープ、制約、成功基準） │
-│  → 実装計画のドラフト作成                                       │
+│  Phase 2: Antigravity (Requirements Draft Plan)                 │
+│  → 承認済み要件を計画ドラフトに変換                              │
 ├─────────────────────────────────────────────────────────────────┤
 │  Phase 3: Antigravity (Prepare Codex Context)                   │
 │  → docs/for-codex/ に構造化コンテキストを生成                   │
@@ -353,7 +364,7 @@ Antigravity が直接実行（リサーチ、ファイル編集等）
 
 | ルール | 内容 |
 |--------|------|
-| language.md | 思考は英語、ユーザーへの応答は日本語 |
+| language.md | 思考は英語、日本語優先（UI/README/会話）で必要時に英語併記 |
 | persona-style.md | 円堂侑進の明るさを保ちつつ品質を守るトーン制御 |
 | codex-delegation.md | Codex への委譲ルール詳細 |
 | coding-principles.md | シンプルさ、単一責任、早期リターン |
@@ -371,7 +382,7 @@ Antigravity が直接実行（リサーチ、ファイル編集等）
 /startproject ユーザー認証機能
 ```
 
-Antigravity が自動的に7フェーズを実行します。
+Antigravity が自動的に8フェーズを実行します。
 
 ### 例2: 設計相談
 

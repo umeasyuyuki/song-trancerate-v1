@@ -13,6 +13,7 @@ Codex が探索ではなく判断に集中できる状態を作る。
 ## Step 1: 入力成果物を収集
 
 - 要件整理メモ
+- 要件深掘り質問と回答（日本語優先、必要なら英語補助）
 - `docs/research/{topic}.md`
 - ブラウジング Artifact（録画/スクリーンショット/メモ）
 - 実装差分・テスト結果（Gate 2 の場合）
@@ -39,6 +40,11 @@ Codex が探索ではなく判断に集中できる状態を作る。
 - `humor_level`
 - `learner_mode`
 - `report_path`
+- `requirements_questions_asked`
+- `requirements_confirmed`
+- `conversation_language`
+- `ui_language`
+- `readme_language`
 
 ## Step 4: 鮮度と整合性を確認
 
@@ -46,6 +52,10 @@ Codex が探索ではなく判断に集中できる状態を作る。
 - `source_commit` が現在のコミットと整合する（差異があれば理由を明記）
 - `known_gaps` が空なら `none` を明記
 - `report_path` が実在し、同一ファイル追記になっている
+- `requirements_questions_asked` が 3 以上
+- `requirements_confirmed` が `yes`
+- `conversation_language`, `ui_language`, `readme_language` が日本語優先設定（例: `ja-priority`, `ja+en`）になっている
+- 曖昧点 (`known_gaps`) が残る場合は質問数 4 以上を推奨
 
 ## Step 5: Codex へ引き渡し
 

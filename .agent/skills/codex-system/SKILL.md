@@ -45,7 +45,8 @@ bash .agent/skills/codex-system/scripts/review.sh --high-risk
 
 1. `docs/for-codex/` を最優先で読む
 2. 矛盾・不足・高リスク時のみコード全体を掘る
-3. 重要判断は `docs/for-codex/decision-log.md` と `docs/DESIGN.md` に反映する
+3. `manifest.md` の `requirements_questions_asked >= 3` と `requirements_confirmed = yes` を満たしてから Gate 実行する（曖昧点が残る場合は 4 問以上推奨）
+4. 重要判断は `docs/for-codex/decision-log.md` と `docs/DESIGN.md` に反映する
 
 ## 結果の活用
 

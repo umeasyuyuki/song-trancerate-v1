@@ -1,34 +1,37 @@
-# For Codex Context
+# Codex 向けコンテキスト
 
-This directory is the handoff layer from Antigravity to Codex.
+このディレクトリは Antigravity から Codex への引き渡し層。
 
-## Reading policy
+## 読み取りポリシー
 
-- Codex should read this directory first.
-- Codex should inspect broader code only when this directory is inconsistent, incomplete, or risk is high.
+- Codex は原則このディレクトリを先に読む。
+- ここが矛盾・不足・高リスクの場合のみ、コード全体を掘る。
 
-## Required files
+## 必須ファイル
 
 - `manifest.md`
 - `decision-log.md`
-- `docs/reports/{task_id}.md` (learning report)
+- `docs/reports/{task_id}.md`（学習レポート）
 
-## Recommended files
+## 推奨ファイル
 
 - `browser-evidence.md`
 - `plan-context.md`
 - `implementation-context.md`
 
-## Update checklist before Codex gates
+## Gate 実行前チェック
 
-1. Refresh `manifest.md` fields (`task_id`, `generated_at`, `source_commit`, `read_order`, `coverage`, `known_gaps`).
-2. Update only the files needed for the current gate.
-3. Keep rejected options and rationale in `decision-log.md`.
-4. Append progress to `docs/reports/{task_id}.md` (same file through the task).
-5. If context is stale, regenerate before calling `ask_codex.sh`.
+1. `manifest.md` の必須項目（`task_id`, `generated_at`, `source_commit`, `read_order`, `coverage`, `known_gaps`, `requirements_questions_asked`, `requirements_confirmed`, `conversation_language`, `ui_language`, `readme_language`）を更新する。
+2. `requirements_questions_asked` が 3 以上であることを確認する（曖昧点が残る場合は 4 以上を推奨）。
+3. `requirements_confirmed` が `yes` であることを確認する。
+4. `conversation_language`, `ui_language`, `readme_language` が日本語優先ポリシー（例: `ja-priority`, `ja+en`）を示すことを確認する。
+5. Gate に必要なファイルだけを更新する。
+6. 却下案と理由を `decision-log.md` に残す。
+7. `docs/reports/{task_id}.md` に同一ファイル追記で進捗を残す。
+8. コンテキストが古い場合は `ask_codex.sh` 実行前に再生成する。
 
-## Persona settings
+## Persona 設定
 
-- `persona_name`: user-facing agent persona
-- `humor_level`: `off|light|on` (default `light`)
-- `learner_mode`: `on|off` (default `on`)
+- `persona_name`: ユーザー向け表示名
+- `humor_level`: `off|light|on`（既定 `light`）
+- `learner_mode`: `on|off`（既定 `on`）

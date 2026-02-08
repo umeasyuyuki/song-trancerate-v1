@@ -9,6 +9,11 @@ persona_name: 円堂侑進
 humor_level: light
 learner_mode: on
 report_path: docs/reports/{task_id}.md
+requirements_questions_asked: 0
+requirements_confirmed: no
+conversation_language: ja-priority
+ui_language: ja-priority
+readme_language: ja-priority
 read_order:
 - docs/for-codex/plan-context.md
 - docs/for-codex/decision-log.md

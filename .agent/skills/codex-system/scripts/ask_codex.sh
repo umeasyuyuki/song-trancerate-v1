@@ -170,6 +170,11 @@ else
 fi
 
 MANIFEST_FILE="$PROJECT_ROOT/docs/for-codex/manifest.md"
+read_manifest_value() {
+  local key="$1"
+  sed -n "s/^${key}:[[:space:]]*//p" "$MANIFEST_FILE" | head -n 1
+}
+
 if [[ "$CODEX_MODE" != "ad-hoc" ]]; then
   if [[ ! -f "$MANIFEST_FILE" ]]; then
     echo "Missing for-codex manifest: $MANIFEST_FILE" >&2
@@ -177,7 +182,25 @@ if [[ "$CODEX_MODE" != "ad-hoc" ]]; then
     exit 1
   fi
 
-  for key in task_id generated_at source_commit read_order coverage known_gaps persona_name humor_level learner_mode report_path; do
+  required_keys=(
+    task_id
+    generated_at
+    source_commit
+    read_order
+    coverage
+    known_gaps
+    persona_name
+    humor_level
+    learner_mode
+    report_path
+    requirements_questions_asked
+    requirements_confirmed
+    conversation_language
+    ui_language
+    readme_language
+  )
+
+  for key in "${required_keys[@]}"; do
     if ! grep -Eq "^${key}:" "$MANIFEST_FILE"; then
       echo "Manifest missing required key: $key" >&2
       echo "Run prepare-codex-context and regenerate docs/for-codex/manifest.md." >&2
@@ -185,7 +208,54 @@ if [[ "$CODEX_MODE" != "ad-hoc" ]]; then
     fi
   done
 
-  REPORT_PATH="$(sed -n 's/^report_path:[[:space:]]*//p' "$MANIFEST_FILE" | head -n 1)"
+  require_non_tbd() {
+    local key="$1"
+    local value
+    value="$(read_manifest_value "$key")"
+    if [[ -z "$value" || "$value" == "TBD" ]]; then
+      echo "Manifest key '$key' must be populated before $CODEX_MODE." >&2
+      exit 1
+    fi
+  }
+
+  for key in task_id generated_at source_commit coverage known_gaps; do
+    require_non_tbd "$key"
+  done
+
+  REQUIREMENTS_QUESTION_COUNT="$(read_manifest_value requirements_questions_asked)"
+  if ! [[ "$REQUIREMENTS_QUESTION_COUNT" =~ ^[0-9]+$ ]]; then
+    echo "Manifest key 'requirements_questions_asked' must be an integer." >&2
+    exit 1
+  fi
+  if (( REQUIREMENTS_QUESTION_COUNT < 3 )); then
+    echo "At least 3 requirement deep-dive questions are required before $CODEX_MODE." >&2
+    exit 1
+  fi
+
+  REQUIREMENTS_CONFIRMED="$(read_manifest_value requirements_confirmed | tr '[:upper:]' '[:lower:]')"
+  if [[ "$REQUIREMENTS_CONFIRMED" != "yes" ]]; then
+    echo "Manifest key 'requirements_confirmed' must be 'yes' before $CODEX_MODE." >&2
+    exit 1
+  fi
+
+  KNOWN_GAPS_VALUE="$(read_manifest_value known_gaps | tr '[:upper:]' '[:lower:]')"
+  if [[ -n "$KNOWN_GAPS_VALUE" && "$KNOWN_GAPS_VALUE" != "none" && "$KNOWN_GAPS_VALUE" != "tbd" ]] && (( REQUIREMENTS_QUESTION_COUNT < 4 )); then
+    echo "Warning: known_gaps is not none. Consider asking 4+ requirement questions for safer planning." >&2
+  fi
+
+  for lang_key in conversation_language ui_language readme_language; do
+    LANG_VALUE="$(read_manifest_value "$lang_key" | tr '[:upper:]' '[:lower:]')"
+    if [[ -z "$LANG_VALUE" || "$LANG_VALUE" == "tbd" ]]; then
+      echo "Manifest key '$lang_key' must be populated." >&2
+      exit 1
+    fi
+    if [[ "$LANG_VALUE" != *ja* ]]; then
+      echo "Manifest key '$lang_key' must indicate Japanese-first policy (include 'ja'), current: ${LANG_VALUE:-empty}." >&2
+      exit 1
+    fi
+  done
+
+  REPORT_PATH="$(read_manifest_value report_path)"
   if [[ -n "$REPORT_PATH" && "$REPORT_PATH" != "TBD" && "$REPORT_PATH" != "docs/reports/{task_id}.md" ]]; then
     if [[ ! -f "$PROJECT_ROOT/$REPORT_PATH" ]]; then
       echo "Warning: report_path does not exist yet: $REPORT_PATH" >&2
@@ -193,7 +263,7 @@ if [[ "$CODEX_MODE" != "ad-hoc" ]]; then
     fi
   fi
 
-  MANIFEST_COMMIT="$(sed -n 's/^source_commit:[[:space:]]*//p' "$MANIFEST_FILE" | head -n 1)"
+  MANIFEST_COMMIT="$(read_manifest_value source_commit)"
   if [[ -n "$MANIFEST_COMMIT" && "$MANIFEST_COMMIT" != "$SOURCE_COMMIT" ]]; then
     echo "Warning: manifest source_commit ($MANIFEST_COMMIT) != current commit ($SOURCE_COMMIT)" >&2
     echo "Proceeding because working tree may be dirty, but refresh context if analysis looks stale." >&2

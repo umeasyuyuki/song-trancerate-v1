@@ -44,6 +44,14 @@ codex exec --model gpt-5.3-codex -c 'model_reasoning_effort="high"' --sandbox re
 1. 原則 `docs/for-codex/` を最優先で読む。
 2. 矛盾・不足・高リスク時のみコード全体を掘る。
 3. `docs/reports/{task_id}.md` を読み、初心者向け説明方針と未理解ポイントを確認する。
+4. `manifest.md` で `requirements_questions_asked >= 3` と `requirements_confirmed = yes` を満たしていない場合は Gate を開始しない。
+5. 曖昧点が残る場合は質問数 4 以上を推奨する。
+
+## 言語ポリシー
+
+- 要件深掘りのユーザー対話は日本語優先で行い、必要なら英語補助を許可する。
+- UI 文言は日本語を既定にし、必要時に英語併記を許可する。
+- README は `README.md`（日本語）を正本とし、英語版は派生として柔軟に更新する。
 
 ## 学習レポート運用
 

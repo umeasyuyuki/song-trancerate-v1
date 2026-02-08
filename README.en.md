@@ -38,6 +38,14 @@ Inspired by [Claude Code Orchestra](https://github.com/DeL-TaiseiOzaki/claude-co
 
 ---
 
+## 🗣️ Language Policy
+
+- UI copy defaults to Japanese, with English support when needed
+- `README.md` is the source-of-truth document, and `README.en.md` is a flexible derivative
+- `/startproject` and `/plan` requirement deep-dive conversations are Japanese-first (English assist allowed)
+
+---
+
 ## 🎯 Who is This For?
 
 - Using Antigravity but want better design and review quality
@@ -129,7 +137,7 @@ In Antigravity's chat, type:
 Antigravity will automatically:
 
 1. Analyze your project structure
-2. Ask about requirements
+2. Run Japanese-first deep-dive requirement questions (min 3, ask 4+ when needed) and get explicit sign-off
 3. Build `docs/for-codex/` context bundle
 4. Run Codex Gate 1 for plan review
 5. Create and execute tasks
@@ -143,7 +151,7 @@ Antigravity will automatically:
 my-project/
 ├── .agent/
 │   ├── workflows/        # 8 workflows
-│   │   ├── startproject.md   # Main workflow (7 phases)
+│   │   ├── startproject.md   # Main workflow (8 phases)
 │   │   ├── plan.md           # Implementation planning
 │   │   ├── tdd.md            # Test-driven development
 │   │   ├── simplify.md       # Refactoring
@@ -193,17 +201,21 @@ my-project/
 
 ## 📖 Workflows in Detail
 
-### /startproject - Main Workflow (7 Phases)
+### /startproject - Main Workflow (8 Phases)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
+│  Phase 0: Antigravity (Requirements Deep Dive / JA)             │
+│  → Ask Japanese-first deep-dive requirement questions (min 3)   │
+│  → Proactively ask 4+ when ambiguity or risk remains            │
+│  → Present requirement summary and get explicit user sign-off   │
+├─────────────────────────────────────────────────────────────────┤
 │  Phase 1: Antigravity (Research)                                │
 │  → Repository analysis, library research                        │
 │  → Output: docs/research/{feature}.md                           │
 ├─────────────────────────────────────────────────────────────────┤
-│  Phase 2: Antigravity (Requirements)                            │
-│  → Requirements gathering (goals, scope, constraints, criteria) │
-│  → Draft implementation plan                                    │
+│  Phase 2: Antigravity (Requirements Draft Plan)                 │
+│  → Convert approved requirements into a draft implementation plan│
 ├─────────────────────────────────────────────────────────────────┤
 │  Phase 3: Antigravity (Prepare Codex Context)                   │
 │  → Build structured context under docs/for-codex/               │
@@ -351,7 +363,7 @@ Antigravity executes directly (research, file editing, etc.)
 
 | Rule | Content |
 |------|---------|
-| language.md | Think in English, respond to user in their language |
+| language.md | Think in English; keep UI/README/conversations Japanese-first with optional English support |
 | persona-style.md | Keep bright style while preserving technical rigor |
 | codex-delegation.md | Detailed Codex delegation rules |
 | coding-principles.md | Simplicity, single responsibility, early return |
@@ -369,7 +381,7 @@ Antigravity executes directly (research, file editing, etc.)
 /startproject User authentication
 ```
 
-Antigravity automatically runs 7 phases.
+Antigravity automatically runs 8 phases.
 
 ### Example 2: Design Consultation
 
