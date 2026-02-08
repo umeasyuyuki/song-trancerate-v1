@@ -3,12 +3,16 @@ import { lookupSong } from "@/lib/itunes";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import LikeButton from "@/components/like-button";
 
 export default async function SongPage({ params }: { params: { id: string } }) {
     const supabase = createClient();
     const { id } = params;
 
-    // 1. Check if song exists in DB
+    // 1. Get User
+    const { data: { user } } = await supabase.auth.getUser();
+
+    // 2. Check if song exists in DB
     const { data: songData } = await supabase
         .from("songs")
         .select("*, lyrics(*)")
@@ -20,22 +24,59 @@ export default async function SongPage({ params }: { params: { id: string } }) {
 
     if (songData && lyrics) {
         // Song and Lyrics found - Show Split View
+
+        // Fetch Like Status
+        let isLiked = false;
+        let likeCount = 0;
+
+        if (songData) {
+            const { count } = await supabase
+                .from("likes")
+                .select("*", { count: "exact", head: true })
+                .eq("song_id", songData.id);
+            likeCount = count || 0;
+
+            if (user) {
+                const { data: likeData } = await supabase
+                    .from("likes")
+                    .select("created_at")
+                    .eq("song_id", songData.id)
+                    .eq("user_id", user.id)
+                    .single();
+                isLiked = !!likeData;
+            }
+        }
+
         return (
             <main className="min-h-screen bg-gray-50 dark:bg-zinc-900">
                 <div className="container mx-auto px-4 py-8">
-                    <div className="flex items-start gap-6 mb-8">
+                    <div className="flex flex-col md:flex-row items-start gap-6 mb-8">
                         {songData.album_art_url && (
                             <Image
                                 src={songData.album_art_url}
                                 alt={songData.title}
                                 width={100}
                                 height={100}
-                                className="rounded-lg shadow"
+                                className="rounded-lg shadow flex-shrink-0"
                             />
                         )}
-                        <div>
-                            <h1 className="text-3xl font-bold">{songData.title}</h1>
-                            <p className="text-xl text-gray-600 dark:text-gray-400">{songData.artist}</p>
+                        <div className="flex-grow">
+                            <h1 className="text-3xl font-bold mb-1">{songData.title}</h1>
+                            <p className="text-xl text-gray-600 dark:text-gray-400 mb-4">{songData.artist}</p>
+
+                            <div className="flex flex-wrap items-center gap-4">
+                                <LikeButton
+                                    songId={songData.id}
+                                    userId={user?.id}
+                                    initialIsLiked={isLiked}
+                                    initialCount={likeCount}
+                                />
+                                {songData.preview_url && (
+                                    <audio controls src={songData.preview_url} className="h-10">
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                )}
+                            </div>
                         </div>
                     </div>
 
