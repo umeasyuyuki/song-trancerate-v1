@@ -1,58 +1,36 @@
-# 環境変数・機密情報
-.env
-.env.local
-.env.*.local
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# APIキー・シークレット
-*.pem
-*.key
-secrets.json
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
 
-# Codex 相談ログ（プライベートな内容を含む可能性）
-logs/codex-responses/*
-!logs/codex-responses/.gitkeep
+# testing
+/coverage
 
-# OS 生成ファイル
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
 .DS_Store
-Thumbs.db
-*:Zone.Identifier
-*.Identifier
+*.pem
 
-# エディタ設定
-.vscode/
-.idea/
-*.swp
-*.swo
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-.Python
-venv/
-.venv/
-env/
-.pytest_cache/
-.mypy_cache/
-*.egg-info/
-dist/
-build/
+# local env files
+.env*.local
 
-# Node.js
-node_modules/
-npm-debug.log
-yarn-error.log
-.pnpm-debug.log
+# vercel
+.vercel
 
-# テスト・カバレッジ
-.coverage
-htmlcov/
-coverage.xml
-*.cover
-
-# ビルド成果物
-*.exe
-*.dll
-*.so
-*.dylib
-*.png
+# typescript
+*.tsbuildinfo
+next-env.d.ts
