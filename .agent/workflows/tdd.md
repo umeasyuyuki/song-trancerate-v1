@@ -1,56 +1,37 @@
 ---
 name: tdd
-description: Red-Green-Refactor サイクルでテスト駆動開発を進める
+description: Red-Green-Refactor サイクルを回しつつ Gate 1/Gate 2 でテスト戦略を監査する
 ---
 
 # /tdd - テスト駆動開発ワークフロー
 
-## Step 1: テストケース設計（Codex CLI に委譲）
+## Step 1: テスト戦略設計（Codex Gate 1）
 
-`codex-system` スキルを使用してテストケースを設計。
+`CODEX_MODE=plan-review` でテスト観点を設計。
 
-**プロンプト例**:
+- 正常系
+- 異常系
+- 境界値
+- 重要なエッジケース
 
-```
-Design test cases for: {機能名}
+## Step 2: Red（Antigravity）
 
-Follow TDD principles:
-1. What should be tested?
-2. Edge cases?
-3. Expected behaviors?
-```
+失敗するテストを作成し、失敗理由を確認。
 
-## Step 2: 失敗するテスト作成 - Red（Antigravity）
+## Step 3: Green（Antigravity）
 
-Codex のテスト設計に基づき、テストコードを作成。
+テストを通す最小限の実装を行う。
 
-- テストファイルを作成
-- テストが失敗することを確認（Red状態）
+## Step 4: Refactor（Antigravity）
 
-## Step 3: 最小限の実装 - Green（Antigravity）
+可読性と保守性を改善し、テストが通ることを維持。
 
-テストを通すための最小限のコードを実装。
+## Step 5: 実装後監査（Codex Gate 2）
 
-- 余計な機能は追加しない
-- テストが通ることを確認（Green状態）
+`CODEX_MODE=implementation-review` で以下を確認：
 
-## Step 4: リファクタリング - Refactor（Codex CLI に委譲）
+- 回帰リスク
+- テストの不足
+- 重要ケースの抜け漏れ
 
-`codex-system` スキルでリファクタリングの提案を受ける。
-
-**プロンプト例**:
-
-```
-Review this code for refactoring opportunities:
-
-{実装コード}
-
-Tests are passing. Suggest improvements for:
-1. Readability
-2. Performance
-3. Maintainability
-```
-
-## Step 5: 繰り返し
-
-全てのテストケースが完了するまで Step 2-4 を繰り返す。
+必要時のみ reasoning effort を `xhigh` に引き上げる。

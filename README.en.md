@@ -23,7 +23,7 @@ Inspired by [Claude Code Orchestra](https://github.com/DeL-TaiseiOzaki/claude-co
 │                          ▼                                  │
 │  ┌───────────────────────────────────────────────────────┐  │
 │  │    Google Antigravity (Orchestrator + Researcher)     │  │
-│  │    → Gemini 3 Pro / 1M token context                  │  │
+│  │    → Gemini 3 Pro / large context window              │  │
 │  │    → User interaction, research, implementation       │  │
 │  │                                                       │  │
 │  │        ┌─────────────────────────────────────────┐    │  │
@@ -51,7 +51,7 @@ Inspired by [Claude Code Orchestra](https://github.com/DeL-TaiseiOzaki/claude-co
 | Role | Agent | Tasks |
 |------|-------|-------|
 | **Orchestrator** | Antigravity | User interaction, task management, workflow control |
-| **Researcher** | Antigravity | Library research, documentation search (1M token context) |
+| **Researcher** | Antigravity | Library research, documentation search (large context window) |
 | **Builder** | Antigravity | Code implementation based on Codex's design |
 | **Designer** | Codex CLI | Architecture design, implementation planning, trade-off analysis |
 | **Debugger** | Codex CLI | Root cause analysis, complex bug investigation |
@@ -130,9 +130,10 @@ Antigravity will automatically:
 
 1. Analyze your project structure
 2. Ask about requirements
-3. Delegate design review to Codex
-4. Create a task list
-5. Document decisions in `docs/DESIGN.md`
+3. Build `docs/for-codex/` context bundle
+4. Run Codex Gate 1 for plan review
+5. Create and execute tasks
+6. Run Codex Gate 2 after implementation
 
 ---
 
@@ -141,12 +142,13 @@ Antigravity will automatically:
 ```
 my-project/
 ├── .agent/
-│   ├── workflows/        # 6 workflows
-│   │   ├── startproject.md   # Main workflow (6 phases)
+│   ├── workflows/        # 7 workflows
+│   │   ├── startproject.md   # Main workflow (7 phases)
 │   │   ├── plan.md           # Implementation planning
 │   │   ├── tdd.md            # Test-driven development
 │   │   ├── simplify.md       # Refactoring
 │   │   ├── checkpoint.md     # Session persistence
+│   │   ├── prepare-codex-context.md # Build Codex context bundle
 │   │   └── init.md           # Project initialization
 │   │
 │   ├── skills/           # 5 skills
@@ -175,6 +177,8 @@ my-project/
 │
 ├── docs/                 # Knowledge base
 │   ├── DESIGN.md             # Design decisions
+│   ├── for-codex/            # Structured context passed to Codex
+│   ├── checkpoints/          # Session resume checkpoints
 │   ├── research/             # Research results
 │   └── libraries/            # Library constraints
 │
@@ -186,7 +190,7 @@ my-project/
 
 ## 📖 Workflows in Detail
 
-### /startproject - Main Workflow (6 Phases)
+### /startproject - Main Workflow (7 Phases)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -198,20 +202,21 @@ my-project/
 │  → Requirements gathering (goals, scope, constraints, criteria) │
 │  → Draft implementation plan                                    │
 ├─────────────────────────────────────────────────────────────────┤
-│  Phase 3: Codex CLI (Design Review)                             │
-│  → Reviews Phase 1 research + Phase 2 plan                      │
-│  → Risk analysis, implementation order suggestions              │
+│  Phase 3: Antigravity (Prepare Codex Context)                   │
+│  → Build structured context under docs/for-codex/               │
 ├─────────────────────────────────────────────────────────────────┤
-│  Phase 4: Antigravity (Task Creation)                           │
+│  Phase 4: Codex CLI (Gate 1: Plan Review)                       │
+│  → Plan assessment, risk analysis, task decomposition            │
+├─────────────────────────────────────────────────────────────────┤
+│  Phase 5: Antigravity (Task Creation / Implementation)          │
 │  → Integrate all inputs                                         │
-│  → Create task list, get user confirmation                      │
+│  → Finalize tasks and implement                                 │
 ├─────────────────────────────────────────────────────────────────┤
-│  Phase 5: Antigravity (Documentation)                           │
-│  → Record design decisions in docs/DESIGN.md                    │
+│  Phase 6: Antigravity (Update docs/for-codex)                   │
+│  → Refresh implementation/test context and decisions             │
 ├─────────────────────────────────────────────────────────────────┤
-│  Phase 6: Codex CLI (Quality Assurance)                         │
-│  → Post-implementation review by Codex                          │
-│  → Unbiased quality assurance                                   │
+│  Phase 7: Codex CLI (Gate 2: Implementation Review)             │
+│  → Post-implementation review and test strategy audit            │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -248,6 +253,14 @@ Save session state for later continuation.
 /checkpoint --full   # Full: includes git history and file changes
 ```
 
+### /prepare-codex-context - Build Codex Context Bundle
+
+Normalize Antigravity artifacts into `docs/for-codex/` before Gate 1 / Gate 2.
+
+```
+/prepare-codex-context
+```
+
 ---
 
 ## 🛠️ Skills in Detail
@@ -273,9 +286,9 @@ The core skill for delegating design, debugging, and review to Codex.
 
 | Skill | Purpose |
 |-------|---------|
-| design-tracker | Track and record design decisions to docs/DESIGN.md |
+| design-tracker | Record working decisions in docs/for-codex/decision-log.md |
 | research | Library research and documentation |
-| update-design | Update DESIGN.md |
+| update-design | Promote approved decisions to docs/DESIGN.md |
 | update-lib-docs | Document library constraints |
 
 ---
@@ -286,14 +299,14 @@ The core skill for delegating design, debugging, and review to Codex.
 
 Replaces Claude Code Orchestra's 6 Hooks with Rules-based routing.
 
-**Decision Flow:**
+**Decision Flow (intent-first with keyword signals):**
 
 ```
 Receive user input
     │
     ▼
-[Check 1] Design decision needed?
-    → Yes: Suggest /plan or use codex-system skill
+[Check 1] Design decision / plan decomposition needed?
+    → Yes: /prepare-codex-context → Gate 1 (plan-review)
     │
     ▼
 [Check 2] TDD needed?
@@ -301,11 +314,11 @@ Receive user input
     │
     ▼
 [Check 3] Debugging needed?
-    → Yes: Use codex-system skill
+    → Yes: Use codex-system in ad-hoc mode
     │
     ▼
 [Check 4] Implementation complete?
-    → Yes: Suggest review with codex-system skill
+    → Yes: /prepare-codex-context → Gate 2 (implementation-review)
     │
     ▼
 Antigravity executes directly (research, file editing, etc.)
@@ -344,7 +357,7 @@ Antigravity executes directly (research, file editing, etc.)
 /startproject User authentication
 ```
 
-Antigravity automatically runs 6 phases.
+Antigravity automatically runs 7 phases.
 
 ### Example 2: Design Consultation
 

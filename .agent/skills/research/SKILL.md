@@ -66,5 +66,5 @@ description: Use this skill to conduct research on libraries, APIs, best practic
 ## 注意事項
 
 - Antigravity 自身が調査を行う（Codex には委譲しない）
-- 1Mトークンコンテキストを活用して広範囲を分析
+- 大規模コンテキストを活用して広範囲を分析
 - 調査結果は必ずファイルに保存

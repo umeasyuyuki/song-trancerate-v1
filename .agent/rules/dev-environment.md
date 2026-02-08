@@ -8,7 +8,7 @@
 
 | ツール | 用途 |
 |--------|------|
-| **uv** | パッケージ管理（pip より高速） |
+| **uv** | パッケージ管理 |
 | **ruff** | リンター＆フォーマッター |
 | **pytest** | テストフレームワーク |
 | **mypy** | 型チェック |
@@ -17,7 +17,7 @@
 
 | ツール | 用途 |
 |--------|------|
-| **pnpm** | パッケージ管理（npm より高速） |
+| **pnpm** | パッケージ管理 |
 | **ESLint** | リンター |
 | **Prettier** | フォーマッター |
 | **Vitest** | テストフレームワーク |
@@ -29,7 +29,7 @@
 ```
 macOS (zsh)
     │
-    ├── Google Antigravity (エディタ)
+    ├── Google Antigravity
     │
     └── Homebrew
             │
@@ -38,57 +38,29 @@ macOS (zsh)
             └── 開発ツール
 ```
 
-### パス設定
-
-Codex CLI を呼び出すスクリプトでは、macOS のローカルパスを使用：
-
-```bash
-NODE_PATH=/opt/homebrew/bin/node
-CODEX_PATH=/opt/homebrew/bin/codex
-```
+## パス設定
 
 必要なら環境変数で上書き：
 
 ```bash
-NODE_PATH="$(which node)" CODEX_PATH="$(which codex)" bash .agent/skills/codex-system/scripts/ask_codex.sh --mode analyze --question "Sanity check"
+NODE_PATH="$(which node)" \
+CODEX_PATH="$(which codex)" \
+CODEX_MODE=plan-review \
+bash .agent/skills/codex-system/scripts/ask_codex.sh \
+  --mode design \
+  --question "Sanity check"
 ```
 
-## 環境変数
+## 依存検証
 
-機密情報は `.env` ファイルで管理し、Git にコミットしない。
-
-```bash
-# .env（Git にコミットしない）
-OPENAI_API_KEY=sk-xxxxx
-DATABASE_URL=postgresql://...
-```
+Skill 検証を使う場合は `PyYAML` を使える状態にする。
 
 ```bash
-# .env.example（Git にコミット）
-OPENAI_API_KEY=your-api-key-here
-DATABASE_URL=your-database-url-here
-```
-
-## 依存関係の管理
-
-### Python
-
-```bash
-# uv を使用
-uv pip install package-name
-uv pip freeze > requirements.txt
-```
-
-### Node.js
-
-```bash
-# pnpm を使用
-pnpm add package-name
-pnpm add -D dev-package-name
+python3 -c "import yaml"
 ```
 
 ## 注意事項
 
-- Homebrew のインストール先は Apple Silicon で `/opt/homebrew`、Intel Mac で `/usr/local`
-- 実行権限が必要なスクリプトは `chmod +x` を付与する
-- 改行コードは LF を使用する
+- Apple Silicon は `/opt/homebrew` が標準
+- スクリプトに実行権限が必要
+- 改行コードは LF を使用

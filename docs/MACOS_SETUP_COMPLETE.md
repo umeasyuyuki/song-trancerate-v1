@@ -169,6 +169,7 @@ which codex
 ```bash
 NODE_PATH="$(which node)" \
 CODEX_PATH="$(which codex)" \
+CODEX_MODE=ad-hoc \
 bash .agent/skills/codex-system/scripts/ask_codex.sh --mode analyze --question "Environment check"
 ```
 

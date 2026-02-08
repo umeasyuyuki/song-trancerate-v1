@@ -6,13 +6,14 @@ The project is initialized with the `antigravity-orchestra` template.
 
 - **Root**: Contains configuration for Antigravity (`.agent`), Codex (`.codex`), and documentation (`docs`).
 - **Source Code**: Currently empty. No existing application code.
-- **Scripts**: The `.agent/skills/codex-system/scripts` directory contains PowerShell scripts (`.ps1`).
+- **Scripts**: The `.agent/skills/codex-system/scripts` directory contains Bash scripts (`ask_codex.sh`, `review.sh`).
+- **Codex handoff layer**: `docs/for-codex/` is used to pass structured context to Codex before gate reviews.
 
 ## Environment Considerations
 
 - **User OS**: macOS
-- **Template Constraints**: The scripts `ask_codex.ps1` and `review.ps1` are written in PowerShell, typically for Windows/WSL2 integration.
-- **Action Item**: Verify if the user has `pwsh` installed or if these scripts need to be ported to Bash/Zsh for native macOS execution.
+- **Template Constraints**: Codex execution is routed through `--sandbox read-only` and mode-based gate orchestration.
+- **Action Item**: Keep `docs/for-codex/manifest.md` fresh before `plan-review` and `implementation-review`.
 
 ## Goal
 

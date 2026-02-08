@@ -34,7 +34,7 @@ Antigravity と Codex CLI の役割境界を定義する。
 |--------|------|-----------|
 | ファイル編集 | sandbox モードで実行 | Antigravity が実装 |
 | ユーザー対話 | 非同期実行のため | Antigravity が担当 |
-| リサーチ | Antigravity の 1M トークンが有効 | Antigravity が担当 |
+| リサーチ | Antigravity の大規模コンテキストが有効 | Antigravity が担当 |
 
 ## Quick Rule
 

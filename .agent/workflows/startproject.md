@@ -1,13 +1,14 @@
 ---
 name: startproject
-description: マルチエージェント協調でプロジェクトを開始する
+description: マルチエージェント協調でプロジェクトを開始し、2段階Codexゲートで品質を担保する
 ---
 
 # /startproject - プロジェクト開始ワークフロー
 
 ## 概要
 
-このワークフローは6つのフェーズで構成され、Antigravity と Codex CLI が協調して開発を進める。
+このワークフローは 7 フェーズで構成される。
+Antigravity が実装を主導し、Codex は Gate 1 / Gate 2 で判断と監査を担当する。
 
 ## Phase 1: リサーチ（Antigravity）
 
@@ -16,65 +17,45 @@ description: マルチエージェント協調でプロジェクトを開始す�
 3. 関連ライブラリを調査
 4. 結果を `docs/research/{feature}.md` に保存
 
-**出力**: リサーチサマリー
+## Phase 2: 要件整理とドラフト計画（Antigravity）
 
-## Phase 2: 要件ヒアリング（Antigravity）
+- 目的、スコープ、制約、成功基準を整理
+- 実装計画のドラフトを作成
 
-ユーザーに以下を確認：
+## Phase 3: Codex コンテキスト準備（Antigravity）
 
-- **目的**: 何を達成したいか
-- **スコープ**: 含めるもの・除外するもの
-- **技術的要件**: 特定のライブラリ、パターン、制約
-- **成功基準**: 完了の判断基準
+- `/prepare-codex-context` を実行して `docs/for-codex/` を更新
+- `manifest.md` の必須キーを埋める
 
-確認後、実装計画のドラフトを作成。
+## Phase 4: Gate 1 - 計画レビュー（Codex CLI）
 
-**出力**: 実装計画ドラフト
+`CODEX_MODE=plan-review` で Codex に委譲：
 
-## Phase 3: 設計レビュー（Codex CLI に委譲）
+- 計画の妥当性
+- リスク分析
+- タスク分解
+- 実装順序
 
-`codex-system` スキルを使用して、Codex CLI に設計レビューを委譲する。
+既定 reasoning effort は `high`。
 
-**プロンプト例**:
+## Phase 5: 実装とタスク実行（Antigravity）
 
-```
-Review this implementation plan:
+- Gate 1 で修正した計画を実装
+- テストを実行し、結果を記録
 
-## Research Summary
-{Phase 1の結果}
+## Phase 6: 実装コンテキスト更新（Antigravity）
 
-## Draft Plan
-{Phase 2の計画}
+- `docs/for-codex/implementation-context.md` を更新
+- `docs/for-codex/decision-log.md` に採用/却下を追記
+- `manifest.md` を再更新
 
-Provide:
-1. Plan Assessment
-2. Risk Analysis  
-3. Implementation Order
-4. Refinements
-```
+## Phase 7: Gate 2 - 実装レビュー（Codex CLI）
 
-**出力**: Codex のレビュー結果
+`CODEX_MODE=implementation-review` で Codex レビューを実施：
 
-## Phase 4: タスクリスト作成（Antigravity）
+- バグ/回帰
+- セキュリティ懸念
+- パフォーマンス問題
+- テスト戦略の不足
 
-1. 全入力（リサーチ + 要件 + Codexレビュー）を統合
-2. 実装タスクリストを作成
-3. ユーザーに最終確認
-
-**出力**: 承認済みタスクリスト
-
-## Phase 5: ドキュメント更新（Antigravity）
-
-- `docs/DESIGN.md` に設計決定を記録
-- 重要な判断の理由を残す
-
-**出力**: 更新されたDESIGN.md
-
-## Phase 6: 品質保証（Codex CLI に委譲）
-
-実装完了後、`codex-system` スキルでレビューを実施。
-
-- 実装バイアスを排除した客観的レビュー
-- セキュリティ・パフォーマンスの確認
-
-**出力**: 最終レビュー結果
+高リスク変更時のみ `xhigh` を使用。

@@ -1,60 +1,59 @@
 ---
 name: codex-system
-description: Use this skill when design decisions, debugging, or code review is needed. Delegates complex reasoning to Codex CLI.
+description: Use this skill when Antigravity needs Codex for deep reasoning tasks: plan review and task decomposition (Gate 1), implementation review and test-strategy audit (Gate 2), root-cause debugging, or architecture trade-off analysis. Trigger on intents like design decision, risk assessment, regression concerns, complex bugs, or explicit requests to consult Codex.
 ---
 
 # Codex System Skill
 
 設計判断・デバッグ・レビューを Codex CLI に委譲する。
 
-## いつ使うか
+## 実行モード
 
-以下のキーワードを検出したら、このスキルを使用：
+- `CODEX_MODE=plan-review`
+  - Gate 1: 計画レビューとタスク分解
+- `CODEX_MODE=implementation-review`
+  - Gate 2: 実装レビューとテスト戦略監査
+- `CODEX_MODE=ad-hoc`
+  - 単発の深掘り調査
 
-### 設計判断
-- 「どう設計」「アーキテクチャ」「どう作る」「design」「architecture」
-- 「どのアプローチ」「どちらがいい」「比較」「trade-off」
+## 使い方
 
-### デバッグ
-- 「なぜ動かない」「エラー」「バグ」「debug」「error」「bug」
-
-### レビュー
-- 「レビュー」「チェック」「確認」「review」「check」
-
-## 使わないとき
-
-- 単純なファイル編集
-- リサーチ・調査（Antigravity自身が行う）
-- ユーザーとの会話
-
-## 実行方法
-
-### 設計・デバッグ（分析のみ）
+### Gate 1（計画）
 
 ```bash
-bash ./scripts/ask_codex.sh --mode analyze --question "{質問}"
+CODEX_MODE=plan-review \
+bash .agent/skills/codex-system/scripts/ask_codex.sh \
+  --mode design \
+  --question "Review and decompose the implementation plan from docs/for-codex."
 ```
 
-### レビュー
+### Gate 2（実装）
 
 ```bash
-bash ./scripts/review.sh
+CODEX_MODE=implementation-review \
+bash .agent/skills/codex-system/scripts/review.sh
 ```
 
-## 言語プロトコル
+### 高リスク変更で推論強度を引き上げる
 
-1. **Codex へは英語で質問** - 推論精度が向上
-2. 英語で回答を受け取る
-3. **ユーザーには日本語で報告**
+```bash
+CODEX_MODE=implementation-review \
+bash .agent/skills/codex-system/scripts/review.sh --high-risk
+```
+
+## コンテキスト方針
+
+1. `docs/for-codex/` を最優先で読む
+2. 矛盾・不足・高リスク時のみコード全体を掘る
+3. 重要判断は `docs/for-codex/decision-log.md` と `docs/DESIGN.md` に反映する
 
 ## 結果の活用
 
-1. Codex の回答を `logs/codex-responses/{mode}-{timestamp}.md` に保存
-2. 設計決定があれば `docs/DESIGN.md` に記録
-3. ユーザーに日本語で要約を報告
+- Codex 応答は `logs/codex-responses/` に保存
+- 必要に応じて `docs/DESIGN.md` に昇格
+- ユーザーには日本語で要約報告
 
 ## 安全性
 
-- Codex は `--sandbox read-only` モードで実行
-- ファイル変更は Antigravity が行う
-- Codex は分析と提案のみ
+- Codex は `--sandbox read-only` で実行
+- 実装・ファイル編集は Antigravity が担当

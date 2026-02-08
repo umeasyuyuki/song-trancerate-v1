@@ -23,7 +23,7 @@
 │                         ▼                                  │
 │  ┌───────────────────────────────────────────────────────┐  │
 │  │    Google Antigravity (Orchestrator + Researcher)     │  │
-│  │    → Gemini 3 Pro / 1Mトークンコンテキスト            │  │
+│  │    → Gemini 3 Pro / 大規模コンテキスト                │  │
 │  │    → ユーザー対話・リサーチ・実装を担当               │  │
 │  │                                                       │  │
 │  │        ┌─────────────────────────────────────────┐    │  │
@@ -51,7 +51,7 @@
 | 役割 | 担当 | タスク |
 |------|------|--------|
 | **Orchestrator** | Antigravity | ユーザー対話、タスク管理、ワークフロー制御 |
-| **Researcher** | Antigravity | ライブラリ調査、ドキュメント検索（1Mトークン活用） |
+| **Researcher** | Antigravity | ライブラリ調査、ドキュメント検索（大規模コンテキスト活用） |
 | **Builder** | Antigravity | Codex の設計に基づくコード実装、ファイル編集 |
 | **Designer** | Codex CLI | アーキテクチャ設計、実装計画、トレードオフ分析 |
 | **Debugger** | Codex CLI | 根本原因分析、複雑なバグ調査 |
@@ -131,9 +131,10 @@ Antigravity が以下を自動的に実行すれば成功です：
 
 1. リポジトリ構造を分析
 2. 要件をヒアリング
-3. Codex に設計レビューを委譲
-4. タスクリストを作成
-5. 設計決定を `docs/DESIGN.md` に記録
+3. `docs/for-codex/` を生成
+4. Codex Gate 1 で計画レビューを実施
+5. タスクリストを作成
+6. 実装後は Codex Gate 2 を実施
 
 ---
 
@@ -142,12 +143,13 @@ Antigravity が以下を自動的に実行すれば成功です：
 ```
 my-project/
 ├── .agent/
-│   ├── workflows/        # 6 ワークフロー
-│   │   ├── startproject.md   # メインワークフロー（6フェーズ）
+│   ├── workflows/        # 7 ワークフロー
+│   │   ├── startproject.md   # メインワークフロー（7フェーズ）
 │   │   ├── plan.md           # 実装計画
 │   │   ├── tdd.md            # テスト駆動開発
 │   │   ├── simplify.md       # リファクタリング
 │   │   ├── checkpoint.md     # セッション永続化
+│   │   ├── prepare-codex-context.md # Codex用コンテキスト生成
 │   │   └── init.md           # 初期化
 │   │
 │   ├── skills/           # 5 スキル
@@ -176,6 +178,8 @@ my-project/
 │
 ├── docs/                 # 知識ベース
 │   ├── DESIGN.md             # 設計決定記録
+│   ├── for-codex/            # Codex委譲用の構造化コンテキスト
+│   ├── checkpoints/          # セッション再開用チェックポイント
 │   ├── research/             # リサーチ結果
 │   └── libraries/            # ライブラリ制約
 │
@@ -187,7 +191,7 @@ my-project/
 
 ## 📖 Workflows の詳細
 
-### /startproject - メインワークフロー（6フェーズ）
+### /startproject - メインワークフロー（7フェーズ）
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -199,20 +203,21 @@ my-project/
 │  → ユーザーから要件ヒアリング（目的、スコープ、制約、成功基準） │
 │  → 実装計画のドラフト作成                                       │
 ├─────────────────────────────────────────────────────────────────┤
-│  Phase 3: Codex CLI (Design Review)                             │
-│  → Phase 1のリサーチ + Phase 2の計画を読み込み                  │
-│  → 計画の深いレビュー・リスク分析・実装順序の提案               │
+│  Phase 3: Antigravity (Prepare Codex Context)                   │
+│  → docs/for-codex/ に構造化コンテキストを生成                   │
 ├─────────────────────────────────────────────────────────────────┤
-│  Phase 4: Antigravity (Task Creation)                           │
+│  Phase 4: Codex CLI (Gate 1: Plan Review)                       │
+│  → 計画レビュー・リスク分析・タスク分解                          │
+├─────────────────────────────────────────────────────────────────┤
+│  Phase 5: Antigravity (Task Creation / Implementation)          │
 │  → 全入力を統合                                                 │
-│  → タスクリスト作成・ユーザー確認                               │
+│  → タスクリスト確定と実装                                       │
 ├─────────────────────────────────────────────────────────────────┤
-│  Phase 5: Antigravity (Documentation)                           │
-│  → docs/DESIGN.md に設計決定を記録                              │
+│  Phase 6: Antigravity (Update docs/for-codex)                   │
+│  → 実装差分・テスト結果・判断履歴を更新                          │
 ├─────────────────────────────────────────────────────────────────┤
-│  Phase 6: Codex CLI (Quality Assurance)                         │
-│  → 実装完了後に Codex でレビュー                                │
-│  → 実装バイアスを排除した品質保証                               │
+│  Phase 7: Codex CLI (Gate 2: Implementation Review)             │
+│  → 実装後レビュー・テスト戦略監査                                │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -249,6 +254,14 @@ Codex がテストケースを設計し、Antigravity が Red-Green-Refactor サ
 /checkpoint --full   # 完全: git履歴・ファイル変更含む
 ```
 
+### /prepare-codex-context - Codex連携コンテキスト生成
+
+Antigravity の成果物を `docs/for-codex/` に正規化し、Gate 1 / Gate 2 に渡します。
+
+```
+/prepare-codex-context
+```
+
 ---
 
 ## 🛠️ Skills の詳細
@@ -274,9 +287,9 @@ Codex がテストケースを設計し、Antigravity が Red-Green-Refactor サ
 
 | スキル | 用途 |
 |--------|------|
-| design-tracker | 設計決定を docs/DESIGN.md に追跡・記録 |
+| design-tracker | 作業中の判断を docs/for-codex/decision-log.md に記録 |
 | research | ライブラリ調査とドキュメント作成 |
-| update-design | DESIGN.md の更新 |
+| update-design | 確定判断を docs/DESIGN.md に昇格 |
 | update-lib-docs | ライブラリ制約の文書化 |
 
 ---
@@ -287,14 +300,14 @@ Codex がテストケースを設計し、Antigravity が Red-Green-Refactor サ
 
 Claude Code Orchestra の 6つの Hooks を Rules で代替します。
 
-**判断フロー：**
+**判断フロー（意図ベース + キーワード補助）：**
 
 ```
 ユーザー入力を受け取る
     │
     ▼
-【チェック1】設計判断が必要か？
-    → Yes: /plan を提案、または codex-system スキルを使用
+【チェック1】設計判断・計画分解が必要か？
+    → Yes: /prepare-codex-context → Gate 1 (plan-review)
     │
     ▼
 【チェック2】TDDが必要か？
@@ -302,11 +315,11 @@ Claude Code Orchestra の 6つの Hooks を Rules で代替します。
     │
     ▼
 【チェック3】デバッグが必要か？
-    → Yes: codex-system スキルを使用
+    → Yes: ad-hoc で codex-system スキルを使用
     │
     ▼
 【チェック4】実装が完了したか？
-    → Yes: codex-system スキルでレビューを提案
+    → Yes: /prepare-codex-context → Gate 2 (implementation-review)
     │
     ▼
 Antigravity が直接実行（リサーチ、ファイル編集等）
@@ -345,7 +358,7 @@ Antigravity が直接実行（リサーチ、ファイル編集等）
 /startproject ユーザー認証機能
 ```
 
-Antigravity が自動的に6フェーズを実行します。
+Antigravity が自動的に7フェーズを実行します。
 
 ### 例2: 設計相談
 

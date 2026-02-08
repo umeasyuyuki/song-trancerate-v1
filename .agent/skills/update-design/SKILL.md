@@ -1,60 +1,27 @@
 ---
 name: update-design
-description: Use this skill to update docs/DESIGN.md with new architectural decisions or changes
+description: Use this skill to promote approved architectural decisions from docs/for-codex/decision-log.md into docs/DESIGN.md, keeping final rationale, alternatives, and impact in the project-level design record.
 ---
 
 # Update Design Skill
 
-`docs/DESIGN.md` を更新し、設計決定を記録する。
+`docs/DESIGN.md` を更新し、確定した設計決定を記録する。
 
 ## いつ使うか
 
-- 新しい設計決定が行われたとき
-- 既存の設計が変更されたとき
-- Codex からの提案を採用したとき
-- アーキテクチャに影響する変更があったとき
-
-## 使わないとき
-
-- 単純なコード修正
-- 設計に影響しない変更
+- Gate 1 / Gate 2 の結果を最終採用したとき
+- アーキテクチャに影響する変更を確定したとき
+- 作業中ログ (`docs/for-codex/decision-log.md`) を正式設計書に昇格するとき
 
 ## 更新手順
 
-1. `docs/DESIGN.md` を読み込む
-2. 適切なセクションを特定
-3. 新しい決定を追記
-4. 日付を含める
-
-## DESIGN.md の構造
-
-```markdown
-# プロジェクト設計ドキュメント
-
-## 概要
-{プロジェクトの目的と範囲}
-
-## アーキテクチャ
-{全体構成}
-
-## 設計決定履歴
-
-### {日付}: {決定タイトル}
-{決定内容と理由}
-
-### {日付}: {決定タイトル}
-{決定内容と理由}
-
-## 技術スタック
-{使用技術のリスト}
-
-## 制約事項
-{守るべき制約}
-```
+1. `docs/for-codex/decision-log.md` から採用済み判断を抽出
+2. `docs/DESIGN.md` の履歴に追記
+3. 背景・理由・代替案・影響を明記
+4. 関連ログへの参照を追加
 
 ## 注意事項
 
-- 既存の内容を上書きしない（追記する）
+- 既存内容を上書きせず追記する
 - 日付を必ず含める
-- 理由を明記する
-- 関連する Codex ログがあればリンクする
+- 却下案も理由とともに残す

@@ -1,46 +1,41 @@
 #!/usr/bin/env bash
-# Codex CLI review script (macOS)
+# Codex CLI review wrapper (macOS)
 # Usage:
-#   bash ./review.sh
+#   bash ./review.sh [ask_codex options]
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd -- "$SCRIPT_DIR/../../../.." && pwd)"
-TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
-OUTPUT_DIR="$PROJECT_ROOT/logs/codex-responses"
-OUTPUT_FILE="$OUTPUT_DIR/review-$TIMESTAMP.md"
+ASK_SCRIPT="$SCRIPT_DIR/ask_codex.sh"
 
-# Defaults optimized for Apple Silicon macOS + Homebrew.
-NODE_PATH="${NODE_PATH:-/opt/homebrew/bin/node}"
-CODEX_PATH="${CODEX_PATH:-/opt/homebrew/bin/codex}"
-
-if [[ ! -x "$CODEX_PATH" ]]; then
-  echo "Codex CLI not found at: $CODEX_PATH" >&2
-  echo "Update CODEX_PATH or install Codex CLI." >&2
+if [[ ! -x "$ASK_SCRIPT" ]]; then
+  echo "ask_codex.sh not found or not executable: $ASK_SCRIPT" >&2
   exit 1
 fi
 
-mkdir -p "$OUTPUT_DIR"
-export PATH="$(dirname "$NODE_PATH"):$PATH"
+has_arg() {
+  local needle="$1"
+  shift
+  for arg in "$@"; do
+    if [[ "$arg" == "$needle" ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
 
-echo "=== Starting Codex Review ==="
-echo
+ARGS=("$@")
 
-pushd "$PROJECT_ROOT" >/dev/null
-if RESULT="$("$CODEX_PATH" exec --model gpt-5.2-codex --sandbox read-only --full-auto --skip-git-repo-check "Review the recent changes in this project. Check for: 1) Code quality issues 2) Security concerns 3) Performance problems 4) Best practice violations. Provide specific recommendations." 2>/dev/null)"; then
-  if [[ -n "$RESULT" ]]; then
-    printf '%s\n' "$RESULT" > "$OUTPUT_FILE"
-    echo "=== Review Results ==="
-    printf '%s\n' "$RESULT"
-    echo
-    echo "Review saved to: $OUTPUT_FILE"
-  else
-    echo "No response from Codex. Check Codex CLI installation and authentication." >&2
-    exit 1
-  fi
-else
-  echo "Failed to execute Codex CLI review." >&2
-  exit 1
+if ! has_arg "--mode" "${ARGS[@]}" && ! has_arg "--task-type" "${ARGS[@]}" && ! has_arg "-m" "${ARGS[@]}"; then
+  ARGS=(--mode review "${ARGS[@]}")
 fi
-popd >/dev/null
+
+if ! has_arg "--codex-mode" "${ARGS[@]}"; then
+  ARGS=(--codex-mode "${CODEX_MODE:-implementation-review}" "${ARGS[@]}")
+fi
+
+if ! has_arg "--question" "${ARGS[@]}" && ! has_arg "-q" "${ARGS[@]}"; then
+  ARGS+=(--question "Review the recent changes in this project. Check for: 1) code quality issues 2) security concerns 3) performance problems 4) best practice violations. Provide prioritized findings and specific recommendations.")
+fi
+
+exec bash "$ASK_SCRIPT" "${ARGS[@]}"

@@ -1,69 +1,30 @@
 ---
 name: design-tracker
-description: Use this skill to track and document architectural and implementation decisions in docs/DESIGN.md
+description: Use this skill to record working decisions during active tasks in docs/for-codex/decision-log.md, especially after browser research or Codex Gate outputs, before promoting final decisions to docs/DESIGN.md.
 ---
 
 # Design Tracker Skill
 
-アーキテクチャ・実装決定を追跡・記録する。
+作業中の設計判断を `docs/for-codex/decision-log.md` に記録する。
 
 ## いつ使うか
 
-- 重要な設計判断が行われたとき
-- アーキテクチャの選択が決まったとき
-- トレードオフの決定がなされたとき
-- Codex から設計提案を受けた後
+- ブラウジング結果から候補を比較したとき
+- Gate 1 / Gate 2 の提案を採用・却下したとき
+- 最終決定前に判断履歴を残したいとき
 
 ## 使わないとき
 
-- 単純なバグ修正
-- コメントの追加
-- フォーマット変更
+- 最終版の設計書を更新するとき（`update-design` を使う）
 
 ## 記録フォーマット
 
-`docs/DESIGN.md` に以下の形式で追記：
+`docs/for-codex/decision-log.md` の表に追記：
 
-```markdown
-## {日付}: {決定のタイトル}
-
-### 背景
-{なぜこの決定が必要だったか}
-
-### 決定
-{何を決定したか}
-
-### 理由
-{なぜこの選択をしたか}
-
-### 代替案
-{検討した他の選択肢}
-
-### 影響
-{この決定による影響}
-```
-
-## 例
-
-```markdown
-## 2026-02-02: 認証方式の選択
-
-### 背景
-ユーザー認証機能を実装する必要がある。
-
-### 決定
-JWT (JSON Web Token) を使用したトークンベース認証を採用。
-
-### 理由
-- ステートレスでスケーラブル
-- フロントエンドとの連携が容易
-- 業界標準
-
-### 代替案
-- セッションベース認証: サーバー側の状態管理が必要
-- OAuth のみ: 自前のユーザー管理が困難
-
-### 影響
-- トークンの有効期限管理が必要
-- リフレッシュトークンの実装が必要
-```
+- `id`
+- `decision`
+- `status (adopt/reject/hold)`
+- `rationale`
+- `impact`
+- `owner`
+- `date`

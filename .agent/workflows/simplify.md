@@ -1,52 +1,36 @@
 ---
 name: simplify
-description: コードを簡潔化し、可読性を向上させる
+description: コードを簡潔化し、変更前後を Gate 1/Gate 2 で検証する
 ---
 
-# /simplify - コードリファクタリングワークフロー
+# /simplify - コード簡潔化ワークフロー
 
-## Step 1: 対象の特定（Antigravity）
+## Step 1: 対象特定（Antigravity）
 
-リファクタリング対象のファイルまたはコードを特定。
+- 複雑度が高い箇所を特定
+- 期待する改善軸（可読性、重複削減、保守性）を定義
 
-- ユーザーが指定したファイル
-- または複雑度が高いと判断されるコード
+## Step 2: Codex コンテキスト準備（Antigravity）
 
-## Step 2: 現状分析（Codex CLI に委譲）
+`/prepare-codex-context` で対象情報を `docs/for-codex/` に集約。
 
-`codex-system` スキルで現状を分析。
+## Step 3: 簡潔化方針レビュー（Codex Gate 1）
 
-**プロンプト例**:
+`CODEX_MODE=plan-review` で安全な簡潔化手順を確認。
 
-```
-Analyze this code for simplification:
+## Step 4: 段階的リファクタリング（Antigravity）
 
-{対象コード}
+- 変更を小さく分割
+- 各段階でテスト実行
 
-Identify:
-1. Complex logic that can be simplified
-2. Duplicated code
-3. Long functions that should be split
-4. Unclear naming
-```
+## Step 5: 実装後レビュー（Codex Gate 2）
 
-## Step 3: リファクタリング実施（Antigravity）
+`CODEX_MODE=implementation-review` で以下を確認：
 
-Codex の提案に基づき、リファクタリングを実施。
+- 挙動回帰の有無
+- 新たな複雑性の発生
+- 見落としテスト
 
-- 一度に1つの改善のみ行う
-- 各変更後にテストを実行
+## Step 6: ドキュメント更新（Antigravity）
 
-## Step 4: レビュー（Codex CLI に委譲）
-
-リファクタリング結果を Codex でレビュー。
-
-**確認ポイント**:
-
-- 動作が変わっていないか
-- 本当にシンプルになったか
-- 新しい問題が生じていないか
-
-## Step 5: ドキュメント更新
-
-大きな変更があれば `docs/DESIGN.md` に記録。
+必要に応じて `docs/DESIGN.md` を更新。

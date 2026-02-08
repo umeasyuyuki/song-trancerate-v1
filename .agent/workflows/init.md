@@ -27,8 +27,10 @@ description: 新規プロジェクトにOrchestra環境をセットアップす�
 .codex/
 
 docs/
+├── for-codex/
 ├── research/
-└── libraries/
+├── libraries/
+└── checkpoints/
 
 logs/
 └── codex-responses/
@@ -42,11 +44,12 @@ logs/
 
 以下のファイルが存在するか確認：
 
-- `.agent/workflows/*.md` (6ファイル)
+- `.agent/workflows/*.md` (7ファイル)
 - `.agent/skills/*/SKILL.md` (5スキル)
 - `.agent/rules/*.md` (8ファイル)
 - `.codex/AGENTS.md`
 - `docs/DESIGN.md`
+- `docs/for-codex/manifest.md`
 
 ## Step 4: 不足ファイルの作成
 
@@ -56,29 +59,22 @@ logs/
 
 `scripts/ask_codex.sh` と `scripts/review.sh` が存在し、実行権限を持つか確認。
 
-ユーザーに以下を確認：
-
 ```bash
 which node
 which codex
 bash .agent/skills/codex-system/scripts/ask_codex.sh --help
 ```
 
-デフォルトは Apple Silicon + Homebrew 前提：
+## Step 6: オプション検証環境の確認
+
+Skill検証を使う場合は依存を満たす：
 
 ```bash
-NODE_PATH=/opt/homebrew/bin/node
-CODEX_PATH=/opt/homebrew/bin/codex
+python3 -c "import yaml"
 ```
 
-## Step 6: 完了報告
+失敗する場合は `PyYAML` を導入してから `quick_validate.py` を使う。
 
-セットアップ完了を報告し、次のステップを案内：
+## Step 7: 完了報告
 
-```
-Orchestra環境のセットアップが完了しました。
-
-次のステップ：
-1. scripts/ask_codex.sh / review.sh の動作確認
-2. /startproject で最初のプロジェクトを開始
-```
+セットアップ完了を報告し、次のステップを案内。
