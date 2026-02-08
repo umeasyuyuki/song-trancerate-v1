@@ -7,7 +7,7 @@ description: Antigravity の成果物を Codex 用コンテキストに正規化
 
 ## 目的
 
-Antigravity のリサーチ・ブラウジング・実装成果を `docs/for-codex/` に構造化して、
+Antigravity のリサーチ・ブラウジング・実装成果を `docs/for-codex/` に構造化し、
 Codex が探索ではなく判断に集中できる状態を作る。
 
 ## Step 1: 入力成果物を収集
@@ -16,6 +16,7 @@ Codex が探索ではなく判断に集中できる状態を作る。
 - `docs/research/{topic}.md`
 - ブラウジング Artifact（録画/スクリーンショット/メモ）
 - 実装差分・テスト結果（Gate 2 の場合）
+- `docs/reports/{task_id}.md`
 
 ## Step 2: 固定マッピングで出力
 
@@ -34,12 +35,17 @@ Codex が探索ではなく判断に集中できる状態を作る。
 - `read_order`
 - `coverage`
 - `known_gaps`
+- `persona_name`
+- `humor_level`
+- `learner_mode`
+- `report_path`
 
 ## Step 4: 鮮度と整合性を確認
 
 - 必須キーが存在する
 - `source_commit` が現在のコミットと整合する（差異があれば理由を明記）
 - `known_gaps` が空なら `none` を明記
+- `report_path` が実在し、同一ファイル追記になっている
 
 ## Step 5: Codex へ引き渡し
 

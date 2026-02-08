@@ -177,13 +177,21 @@ if [[ "$CODEX_MODE" != "ad-hoc" ]]; then
     exit 1
   fi
 
-  for key in task_id generated_at source_commit read_order coverage known_gaps; do
+  for key in task_id generated_at source_commit read_order coverage known_gaps persona_name humor_level learner_mode report_path; do
     if ! grep -Eq "^${key}:" "$MANIFEST_FILE"; then
       echo "Manifest missing required key: $key" >&2
       echo "Run prepare-codex-context and regenerate docs/for-codex/manifest.md." >&2
       exit 1
     fi
   done
+
+  REPORT_PATH="$(sed -n 's/^report_path:[[:space:]]*//p' "$MANIFEST_FILE" | head -n 1)"
+  if [[ -n "$REPORT_PATH" && "$REPORT_PATH" != "TBD" && "$REPORT_PATH" != "docs/reports/{task_id}.md" ]]; then
+    if [[ ! -f "$PROJECT_ROOT/$REPORT_PATH" ]]; then
+      echo "Warning: report_path does not exist yet: $REPORT_PATH" >&2
+      echo "Create or update it via /update-learning-report before final gate execution." >&2
+    fi
+  fi
 
   MANIFEST_COMMIT="$(sed -n 's/^source_commit:[[:space:]]*//p' "$MANIFEST_FILE" | head -n 1)"
   if [[ -n "$MANIFEST_COMMIT" && "$MANIFEST_COMMIT" != "$SOURCE_COMMIT" ]]; then

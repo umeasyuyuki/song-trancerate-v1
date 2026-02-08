@@ -142,13 +142,14 @@ Antigravity will automatically:
 ```
 my-project/
 ├── .agent/
-│   ├── workflows/        # 7 workflows
+│   ├── workflows/        # 8 workflows
 │   │   ├── startproject.md   # Main workflow (7 phases)
 │   │   ├── plan.md           # Implementation planning
 │   │   ├── tdd.md            # Test-driven development
 │   │   ├── simplify.md       # Refactoring
 │   │   ├── checkpoint.md     # Session persistence
 │   │   ├── prepare-codex-context.md # Build Codex context bundle
+│   │   ├── update-learning-report.md # Append learner report
 │   │   └── init.md           # Project initialization
 │   │
 │   ├── skills/           # 5 skills
@@ -162,10 +163,11 @@ my-project/
 │   │   ├── update-design/
 │   │   └── update-lib-docs/
 │   │
-│   └── rules/            # 8 rules
+│   └── rules/            # 9 rules
 │       ├── delegation-triggers.md  # Auto-routing (Hooks alternative)
 │       ├── role-boundaries.md      # Role separation
 │       ├── language.md
+│       ├── persona-style.md        # Endo Tasukushin tone control
 │       ├── codex-delegation.md
 │       ├── coding-principles.md
 │       ├── dev-environment.md
@@ -178,6 +180,7 @@ my-project/
 ├── docs/                 # Knowledge base
 │   ├── DESIGN.md             # Design decisions
 │   ├── for-codex/            # Structured context passed to Codex
+│   ├── reports/              # Learner-friendly progress reports
 │   ├── checkpoints/          # Session resume checkpoints
 │   ├── research/             # Research results
 │   └── libraries/            # Library constraints
@@ -261,6 +264,14 @@ Normalize Antigravity artifacts into `docs/for-codex/` before Gate 1 / Gate 2.
 /prepare-codex-context
 ```
 
+### /update-learning-report - Append Learner Report
+
+Append progress and decision rationale to the same file: `docs/reports/{task_id}.md`.
+
+```
+/update-learning-report
+```
+
 ---
 
 ## 🛠️ Skills in Detail
@@ -341,6 +352,7 @@ Antigravity executes directly (research, file editing, etc.)
 | Rule | Content |
 |------|---------|
 | language.md | Think in English, respond to user in their language |
+| persona-style.md | Keep bright style while preserving technical rigor |
 | codex-delegation.md | Detailed Codex delegation rules |
 | coding-principles.md | Simplicity, single responsibility, early return |
 | dev-environment.md | Development environment (uv, ruff, pytest, etc.) |

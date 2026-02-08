@@ -21,6 +21,7 @@ description: セッション状態と Codex 連携コンテキストを保存し
 - 未完了の作業
 - 重要な決定事項
 - `docs/for-codex/` の最終更新状況
+- `docs/reports/{task_id}.md` の最終更新状況
 
 ## Step 2: チェックポイントファイル作成
 
@@ -30,15 +31,20 @@ description: セッション状態と Codex 連携コンテキストを保存し
 
 チェックポイントに以下を記録：
 
-- `docs/for-codex/manifest.md` の `task_id`, `generated_at`, `source_commit`
+- `docs/for-codex/manifest.md` の `task_id`, `generated_at`, `source_commit`, `report_path`
 - 次回再開時に再生成が必要なファイル
 
-## Step 4: --full オプション時の追加処理
+## Step 4: 学習レポートの再開ポイント記録
+
+- 最後に追記した見出し
+- 次に追記すべきフェーズ
+
+## Step 5: --full オプション時の追加処理
 
 - `git status` の結果
 - 変更ファイルの diff 概要
 - 実行環境情報
 
-## Step 5: 確認
+## Step 6: 確認
 
 チェックポイント保存を確認し、ユーザーに報告。

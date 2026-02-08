@@ -11,6 +11,7 @@ This directory is the handoff layer from Antigravity to Codex.
 
 - `manifest.md`
 - `decision-log.md`
+- `docs/reports/{task_id}.md` (learning report)
 
 ## Recommended files
 
@@ -23,4 +24,11 @@ This directory is the handoff layer from Antigravity to Codex.
 1. Refresh `manifest.md` fields (`task_id`, `generated_at`, `source_commit`, `read_order`, `coverage`, `known_gaps`).
 2. Update only the files needed for the current gate.
 3. Keep rejected options and rationale in `decision-log.md`.
-4. If context is stale, regenerate before calling `ask_codex.sh`.
+4. Append progress to `docs/reports/{task_id}.md` (same file through the task).
+5. If context is stale, regenerate before calling `ask_codex.sh`.
+
+## Persona settings
+
+- `persona_name`: user-facing agent persona
+- `humor_level`: `off|light|on` (default `light`)
+- `learner_mode`: `on|off` (default `on`)

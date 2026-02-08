@@ -28,6 +28,7 @@ description: 新規プロジェクトにOrchestra環境をセットアップす�
 
 docs/
 ├── for-codex/
+├── reports/
 ├── research/
 ├── libraries/
 └── checkpoints/
@@ -44,12 +45,13 @@ logs/
 
 以下のファイルが存在するか確認：
 
-- `.agent/workflows/*.md` (7ファイル)
+- `.agent/workflows/*.md` (8ファイル)
 - `.agent/skills/*/SKILL.md` (5スキル)
-- `.agent/rules/*.md` (8ファイル)
+- `.agent/rules/*.md` (9ファイル)
 - `.codex/AGENTS.md`
 - `docs/DESIGN.md`
 - `docs/for-codex/manifest.md`
+- `docs/reports/TEMPLATE.md`
 
 ## Step 4: 不足ファイルの作成
 

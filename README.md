@@ -74,7 +74,7 @@
 
 ## 🚀 クイックスタート
 
-非エンジニア向けの完全版手順は `docs/MACOS_SETUP_COMPLETE.md` を参照してください。
+完全版手順は `docs/MACOS_SETUP_COMPLETE.md` を参照してください。
 
 ### Step 1: テンプレートの取得
 
@@ -143,13 +143,14 @@ Antigravity が以下を自動的に実行すれば成功です：
 ```
 my-project/
 ├── .agent/
-│   ├── workflows/        # 7 ワークフロー
+│   ├── workflows/        # 8 ワークフロー
 │   │   ├── startproject.md   # メインワークフロー（7フェーズ）
 │   │   ├── plan.md           # 実装計画
 │   │   ├── tdd.md            # テスト駆動開発
 │   │   ├── simplify.md       # リファクタリング
 │   │   ├── checkpoint.md     # セッション永続化
 │   │   ├── prepare-codex-context.md # Codex用コンテキスト生成
+│   │   ├── update-learning-report.md # 学習レポート追記
 │   │   └── init.md           # 初期化
 │   │
 │   ├── skills/           # 5 スキル
@@ -163,10 +164,11 @@ my-project/
 │   │   ├── update-design/
 │   │   └── update-lib-docs/
 │   │
-│   └── rules/            # 8 ルール
+│   └── rules/            # 9 ルール
 │       ├── delegation-triggers.md  # 自動振り分け（Hooks代替）
 │       ├── role-boundaries.md      # 役割境界
 │       ├── language.md
+│       ├── persona-style.md        # 円堂侑進トーン制御
 │       ├── codex-delegation.md
 │       ├── coding-principles.md
 │       ├── dev-environment.md
@@ -179,6 +181,7 @@ my-project/
 ├── docs/                 # 知識ベース
 │   ├── DESIGN.md             # 設計決定記録
 │   ├── for-codex/            # Codex委譲用の構造化コンテキスト
+│   ├── reports/              # 初学者向け学習レポート
 │   ├── checkpoints/          # セッション再開用チェックポイント
 │   ├── research/             # リサーチ結果
 │   └── libraries/            # ライブラリ制約
@@ -262,6 +265,14 @@ Antigravity の成果物を `docs/for-codex/` に正規化し、Gate 1 / Gate 2 
 /prepare-codex-context
 ```
 
+### /update-learning-report - 学習レポート追記
+
+同一ファイル `docs/reports/{task_id}.md` に進捗と判断理由を追記します。
+
+```
+/update-learning-report
+```
+
 ---
 
 ## 🛠️ Skills の詳細
@@ -279,6 +290,7 @@ Antigravity の成果物を `docs/for-codex/` に正規化し、Gate 1 / Gate 2 
 | レビュー系 | 「レビュー」「チェック」「確認」「review」「check」 |
 
 **使わないとき：**
+
 - 単純なファイル編集
 - リサーチ・調査（Antigravity 自身が行う）
 - ユーザーとの会話
@@ -342,6 +354,7 @@ Antigravity が直接実行（リサーチ、ファイル編集等）
 | ルール | 内容 |
 |--------|------|
 | language.md | 思考は英語、ユーザーへの応答は日本語 |
+| persona-style.md | 円堂侑進の明るさを保ちつつ品質を守るトーン制御 |
 | codex-delegation.md | Codex への委譲ルール詳細 |
 | coding-principles.md | シンプルさ、単一責任、早期リターン |
 | dev-environment.md | 開発環境設定（uv, ruff, pytest等） |
@@ -486,4 +499,4 @@ MIT License - 詳細は [LICENSE](LICENSE) を参照してください。
 
 ---
 
-📅 **最終更新**: 2026年2月2日
+📅 **最終更新**: 2026年2月8日

@@ -23,7 +23,11 @@ description: コードを簡潔化し、変更前後を Gate 1/Gate 2 で検証�
 - 変更を小さく分割
 - 各段階でテスト実行
 
-## Step 5: 実装後レビュー（Codex Gate 2）
+## Step 5: 学習レポート更新（Antigravity）
+
+`docs/reports/{task_id}.md` に「何を簡潔化し、なぜ分割したか」を追記。
+
+## Step 6: 実装後レビュー（Codex Gate 2）
 
 `CODEX_MODE=implementation-review` で以下を確認：
 
@@ -31,6 +35,6 @@ description: コードを簡潔化し、変更前後を Gate 1/Gate 2 で検証�
 - 新たな複雑性の発生
 - 見落としテスト
 
-## Step 6: ドキュメント更新（Antigravity）
+## Step 7: ドキュメント更新（Antigravity）
 
 必要に応じて `docs/DESIGN.md` を更新。
