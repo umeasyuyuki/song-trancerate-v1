@@ -15,9 +15,11 @@ export default async function SongPage({ params }: { params: { id: string } }) {
         .eq("itunes_id", id)
         .single();
 
-    if (songData && songData.lyrics?.length > 0) {
+    // specific handling for 1:1 relation (PostgREST returns object if unique constraint exists)
+    const lyrics = Array.isArray(songData?.lyrics) ? songData?.lyrics[0] : songData?.lyrics;
+
+    if (songData && lyrics) {
         // Song and Lyrics found - Show Split View
-        const lyrics = songData.lyrics[0];
         return (
             <main className="min-h-screen bg-gray-50 dark:bg-zinc-900">
                 <div className="container mx-auto px-4 py-8">

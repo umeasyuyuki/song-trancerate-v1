@@ -21,6 +21,7 @@
 1. **Supabase Project**: Create project and apply `supabase/schema.sql`.
 2. **Environment Variables**: Populate `.env.local` with Supabase keys and DeepL API Key.
 3. **DeepL Account**: Required for translation API.
+4. **Google Auth**: Enable in Supabase Dashboard (Completed by User).
 
 ## Known Limitations (V1)
 
