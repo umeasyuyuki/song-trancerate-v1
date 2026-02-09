@@ -106,7 +106,7 @@ export default async function Home({
                 <span>📖</span> Vocabulary
               </h2>
               <p className="text-gray-600 dark:text-gray-400">
-                Review words you've saved while learning.
+                Review words you&apos;ve saved while learning.
               </p>
             </Link>
           </div>

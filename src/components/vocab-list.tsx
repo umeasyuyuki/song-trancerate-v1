@@ -37,7 +37,7 @@ export default function VocabList() {
         };
 
         fetchVocab();
-    }, []);
+    }, [supabase]);
 
     const deleteVocab = async (id: string) => {
         const { error } = await supabase.from("vocabularies").delete().eq("id", id);

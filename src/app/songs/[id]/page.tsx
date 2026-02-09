@@ -1,3 +1,4 @@
+
 import { createClient } from "@/utils/supabase/server";
 import { lookupSong } from "@/lib/itunes";
 import Link from "next/link";
@@ -5,6 +6,8 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import LikeButton from "@/components/like-button";
 import LyricsViewer from "@/components/lyrics-viewer";
+import { isAdmin } from "@/lib/admin";
+import LyricsEditor from "@/components/lyrics-editor";
 
 export default async function SongPage({ params }: { params: { id: string } }) {
     const supabase = createClient();
@@ -12,6 +15,7 @@ export default async function SongPage({ params }: { params: { id: string } }) {
 
     // 1. Get User
     const { data: { user } } = await supabase.auth.getUser();
+    const isUserAdmin = isAdmin(user?.id);
 
     // 2. Check if song exists in DB
     const { data: songData } = await supabase
@@ -76,6 +80,13 @@ export default async function SongPage({ params }: { params: { id: string } }) {
                                     <audio controls src={songData.preview_url} className="h-10">
                                         Your browser does not support the audio element.
                                     </audio>
+                                )}
+                                {isUserAdmin && (
+                                    <LyricsEditor
+                                        songId={songData.id}
+                                        initialLyricsEn={lyrics?.content_en || ""}
+                                        initialLyricsJa={lyrics?.content_ja || ""}
+                                    />
                                 )}
                             </div>
                         </div>
