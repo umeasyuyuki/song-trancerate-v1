@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import LikeButton from "@/components/like-button";
+import LyricsViewer from "@/components/lyrics-viewer";
 
 export default async function SongPage({ params }: { params: { id: string } }) {
     const supabase = createClient();
@@ -80,20 +81,12 @@ export default async function SongPage({ params }: { params: { id: string } }) {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="bg-white dark:bg-zinc-800 p-6 rounded-lg shadow">
-                            <h2 className="text-lg font-semibold mb-4 border-b pb-2">Original Lyrics (EN)</h2>
-                            <div className="whitespace-pre-wrap font-serif text-lg leading-relaxed">
-                                {lyrics.content_en}
-                            </div>
-                        </div>
-                        <div className="bg-white dark:bg-zinc-800 p-6 rounded-lg shadow">
-                            <h2 className="text-lg font-semibold mb-4 border-b pb-2">Japanese Translation</h2>
-                            <div className="whitespace-pre-wrap font-sans text-lg leading-relaxed text-gray-800 dark:text-gray-200">
-                                {lyrics.content_ja || "No translation available."}
-                            </div>
-                        </div>
-                    </div>
+                    <LyricsViewer
+                        lyrics={lyrics}
+                        songId={songData.id}
+                        songTitle={songData.title}
+                        artist={songData.artist}
+                    />
                 </div>
             </main>
         );

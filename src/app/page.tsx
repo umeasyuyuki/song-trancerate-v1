@@ -3,6 +3,7 @@ import { SearchBar } from "@/components/search-bar";
 import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@/utils/supabase/server";
+// import VocabList from "@/components/vocab-list";
 
 export default async function Home({
   searchParams,
@@ -79,40 +80,36 @@ export default async function Home({
             )}
           </div>
         ) : (
-          /* Favorites Section */
-          favorites.length > 0 && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-                <span>❤️</span> Your Favorites
+          /* Favorites & Vocab Section */
+          /* Dashboard Links */
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Link href="/songs" className="block p-6 bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-700 hover:shadow-md hover:border-blue-500 transition group">
+              <h2 className="text-xl font-bold mb-2 flex items-center gap-2 group-hover:text-blue-600">
+                <span>📚</span> Library
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {favorites.map((song) => (
-                  <Link
-                    key={song.itunes_id}
-                    href={`/songs/${song.itunes_id}`}
-                    className="block p-4 bg-white dark:bg-zinc-800 rounded-lg shadow hover:shadow-md transition border border-gray-100 dark:border-zinc-700 hover:border-pink-500"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="relative w-16 h-16 flex-shrink-0">
-                        {song.album_art_url && (
-                          <Image
-                            src={song.album_art_url}
-                            alt={song.title}
-                            fill
-                            className="rounded object-cover"
-                          />
-                        )}
-                      </div>
-                      <div className="truncate">
-                        <h3 className="font-bold truncate">{song.title}</h3>
-                        <p className="text-sm text-gray-500 truncate">{song.artist}</p>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )
+              <p className="text-gray-600 dark:text-gray-400">
+                Explore all songs with lyrics available.
+              </p>
+            </Link>
+
+            <Link href="/favorites" className="block p-6 bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-700 hover:shadow-md hover:border-red-500 transition group">
+              <h2 className="text-xl font-bold mb-2 flex items-center gap-2 group-hover:text-red-500">
+                <span>❤️</span> Favorites
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400">
+                Access your liked songs collection.
+              </p>
+            </Link>
+
+            <Link href="/vocabulary" className="block p-6 bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-700 hover:shadow-md hover:border-green-500 transition group">
+              <h2 className="text-xl font-bold mb-2 flex items-center gap-2 group-hover:text-green-500">
+                <span>📖</span> Vocabulary
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400">
+                Review words you've saved while learning.
+              </p>
+            </Link>
+          </div>
         )}
       </div>
     </main>
