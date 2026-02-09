@@ -2,8 +2,8 @@ name: Daily Lyrics Collection
 
 on:
   schedule:
-    # Run every hour
-    - cron: '0 * * * *'
+    # Run every 5 minutes (High Frequency)
+    - cron: '*/5 * * * *'
   workflow_dispatch: # Allow manual trigger
 
 jobs:
