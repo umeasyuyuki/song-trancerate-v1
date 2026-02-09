@@ -23,6 +23,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Debug Env Vars
+        run: |
+          echo "LASTFM_API_KEY is set: ${{ secrets.LASTFM_API_KEY != '' }}"
+          echo "GENIUS_ACCESS_TOKEN is set: ${{ secrets.GENIUS_ACCESS_TOKEN != '' }}"
+          echo "GEMINI_API_KEY is set: ${{ secrets.GEMINI_API_KEY != '' }}"
+          echo "NEXT_PUBLIC_SUPABASE_URL is set: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL != '' }}"
+          echo "SUPABASE_SERVICE_ROLE_KEY is set: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY != '' }}"
+
       - name: Run Lyrics Collector
         run: npx ts-node --project tsconfig.scripts.json scripts/collect-lyrics.ts
         env:
