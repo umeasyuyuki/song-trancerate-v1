@@ -80,14 +80,43 @@ async function fetchTopTracksLastFM(artist: string): Promise<SongMetadata[]> {
     }
 }
 
+import * as cheerio from 'cheerio';
+
 async function fetchLyricsGenius(title: string, artist: string): Promise<string | null> {
     try {
         const searches = await genius.songs.search(`${title} ${artist}`);
         if (searches.length === 0) return null;
 
         const firstSong = searches[0];
-        const lyrics = await firstSong.lyrics();
-        return lyrics;
+        const url = firstSong.url;
+        console.log(`  Found URL: ${url}`);
+
+        // Manual Scraping to bypass Cloudflare/Bot detection
+        const { data: html } = await axios.get(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.5',
+            }
+        });
+
+        const $ = cheerio.load(html);
+        let lyrics = '';
+
+        // Genius lyrics are in containers with data-lyrics-container="true"
+        $('div[data-lyrics-container="true"]').each((i, el) => {
+            // Replace <br> with newlines
+            $(el).find('br').replaceWith('\n');
+            lyrics += $(el).text() + '\n';
+        });
+
+        if (!lyrics.trim()) {
+            // Fallback to library method if scraping fails (though likely library fails too)
+            console.warn("  Manual scraping returned empty. Trying library fallback...");
+            return await firstSong.lyrics();
+        }
+
+        return lyrics.trim();
     } catch (error) {
         console.error(`Error fetching Genius lyrics for ${title}:`, error);
         return null;
